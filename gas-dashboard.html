@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>US Gas Price Intelligence Dashboard – Apr 27, 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0d1117;--card:#161b22;--border:#21262d;--text:#e6edf3;
+  --muted:#7d8590;--accent:#58a6ff;
+  --west:#1f6feb;--south:#d29922;--midwest:#3fb950;--ne:#a371f7;
+  --green:#3fb950;--red:#f85149;--yellow:#d29922;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;}
+
+.header{background:linear-gradient(135deg,#0d1117,#161b22);border-bottom:1px solid var(--border);
+  padding:16px 28px;display:flex;align-items:center;justify-content:space-between;}
+.header h1{font-size:1.25rem;font-weight:700;}
+.header h1 span{color:var(--accent);}
+.live{background:#0f3b1e;border:1px solid #238636;color:#3fb950;
+  padding:3px 10px;border-radius:12px;font-size:.7rem;font-weight:700;margin-left:8px;}
+.badge{background:#1c2128;border:1px solid #30363d;color:#8b949e;
+  padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:600;}
+
+.tabs{display:flex;gap:2px;padding:12px 28px 0;border-bottom:1px solid var(--border);background:#0d1117;}
+.tab{padding:8px 18px;border-radius:6px 6px 0 0;cursor:pointer;font-size:.82rem;font-weight:600;
+  color:var(--muted);border:1px solid transparent;border-bottom:none;transition:all .2s;}
+.tab:hover{color:var(--text);background:#161b22;}
+.tab.active{background:var(--card);color:var(--text);border-color:var(--border);}
+
+.content{padding:20px 28px;display:none;}
+.content.active{display:block;}
+
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--clr,var(--accent));}
+.kpi-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;}
+.kpi-val{font-size:1.65rem;font-weight:700;}
+.kpi-sub{font-size:.69rem;color:var(--muted);margin-top:3px;}
+.kpi-trend{font-size:.72rem;font-weight:600;margin-top:3px;}
+.up{color:var(--red);}
+.down{color:var(--green);}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;}
+.card-title{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.src{font-size:.63rem;font-weight:400;color:var(--green);margin-left:auto;text-transform:none;letter-spacing:0;}
+
+.tbl{width:100%;border-collapse:collapse;font-size:.77rem;}
+.tbl th{background:#1c2128;color:var(--muted);padding:8px 10px;text-align:left;
+  font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);}
+.tbl td{padding:8px 10px;border-bottom:1px solid #21262d;}
+.tbl tr:hover td{background:#1c2128;}
+.num{text-align:right;font-variant-numeric:tabular-nums;font-family:monospace;}
+.pill{padding:2px 8px;border-radius:8px;font-size:.68rem;font-weight:700;}
+.pg{background:#0f3b1e;color:#3fb950;}
+.pr{background:#3b0f0f;color:#f85149;}
+.py{background:#3b2f0f;color:#d29922;}
+
+.bar-wrap{background:#1c2128;border-radius:3px;height:7px;width:100%;}
+.bar-fill{height:7px;border-radius:3px;}
+
+.chart-h{position:relative;height:260px;}
+.chart-ht{position:relative;height:320px;}
+
+.rw{background:#1c2f4a;color:#58a6ff;}
+.rs{background:#3b2e0f;color:#d29922;}
+.rm{background:#0f3b1e;color:#3fb950;}
+.rn{background:#2e1b4a;color:#a371f7;}
+
+footer{text-align:center;padding:12px;color:var(--muted);font-size:.68rem;
+  border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>⛽ US Gas Price <span>Intelligence</span> <span class="live">✓ LIVE AAA DATA</span></h1>
+    <div style="font-size:.74rem;color:var(--muted);margin-top:3px">All 50 States + DC · Scraped live from AAA · April 27, 2026</div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <span class="badge">51 Locations</span>
+    <span class="badge">4 Fuel Types</span>
+    <span class="badge">Source: AAA</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('overview')">📊 Overview</div>
+  <div class="tab" onclick="switchTab('states')">🗺 All States</div>
+  <div class="tab" onclick="switchTab('regions')">📍 Regions</div>
+  <div class="tab" onclick="switchTab('fuels')">⛽ Fuel Types</div>
+  <div class="tab" onclick="switchTab('trends')">📈 Trends</div>
+</div>="card-title"><span class="dot" style="background:#3fb950"></span>10 Cheapest States – Regular
+        <span class="src">✓ AAA Live</span></div>
+      <div class="chart-h"><canvas id="c_bot10" width="1610" height="416" style="display: block; box-sizing: border-box; height: 260px; width: 1006px;"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#d29922"></span>National Avg by Fuel Type
+        <span class="src">✓ AAA</span></div>
+      <div class="chart-h"><canvas id="c_fuels_bar" width="1045" height="416" style="display: block; box-sizing: border-box; height: 260px; width: 653px;"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#a371f7"></span>Regional Avg – Regular Gas</div>
+      <div class="chart-h"><canvas id="c_region_bar" width="1045" height="416" style="display: block; box-sizing: border-box; height: 260px; width: 653px;"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#58a6ff"></span>YoY Price Change by Fuel</div>
+      <table class="tbl">
+        <tbody><tr><th>Fuel</th><th class="num">Today</th><th class="num">Year Ago</th><th class="num">Change</th></tr>
+        <tr><td><b>Regular</b></td><td class="num">$4.111</td><td class="num">$3.149</td><td class="num up">+$0.962</td></tr>
+        <tr><td><b>Mid-Grade</b></td><td class="num">$4.592</td><td class="num">$3.626</td><td class="num up">+$0.966</td></tr>
+        <tr><td><b>Premium</b></td><td class="num">$4.969</td><td class="num">$3.980</td><td class="num up">+$0.989</td></tr>
+        <tr><td><b>Diesel</b></td><td class="num">$5.449</td><td class="num">$3.552</td><td class="num up">+$1.897</td></tr>
+        <tr><td><b>E85</b></td><td class="num">$3.213</td><td class="num">$2.578</td><td class="num up">+$0.635</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ALL STATES ══ -->
+<div id="states" class="content">
+  <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;">
+    <input id="state-search" placeholder="🔍 Filter states..." onkeyup="filterStates()" style="padding:7px 12px;background:#1c2128;border:1px solid #30363d;border-radius:6px;
+             color:var(--text);font-size:.82rem;width:200px;outline:none;">
+    <select id="region-filter" onchange="filterStates()" style="padding:7px 10px;background:#1c2128;border:1px solid #30363d;border-radius:6px;
+             color:var(--text);font-size:.82rem;outline:none;">
+      <option value="">All Regions</option>
+      <option value="West">West</option>
+      <option value="South">South</option>
+      <option value="Midwest">Midwest</option>
+      <option value="Northeast">Northeast</option>
+    </select>
+    <select id="sort-filter" onchange="filterStates()" style="padding:7px 10px;background:#1c2128;border:1px solid #30363d;border-radius:6px;
+             color:var(--text);font-size:.82rem;outline:none;">
+      <option value="reg-asc">Sort: Cheapest First</option>
+      <option value="reg-desc">Sort: Most Expensive First</option>
+      <option value="alpha">Sort: A–Z</option>
+    </select>
+  </div>
+  <div class="card">
+    <table class="tbl" id="states-table">
+      <thead>
+        <tr><th>State</th><th>Region</th><th class="num">Regular</th><th class="num">Mid-Grade</th><th class="num">Premium</th><th class="num">Diesel</th><th class="num">vs Natl Avg</th><th>Level</th></tr>
+      </thead>
+      <tbody id="states-tbody"><tr>
+      <td><b>Oklahoma</b> <span style="color:#7d8590;font-size:.75em">OK</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.500</td>
+      <td class="num">$3.901</td>
+      <td class="num">$4.201</td>
+      <td class="num">$4.674</td>
+      <td class="num down"> $-0.611</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:54%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Kansas</b> <span style="color:#7d8590;font-size:.75em">KS</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.525</td>
+      <td class="num">$3.837</td>
+      <td class="num">$4.189</td>
+      <td class="num">$4.709</td>
+      <td class="num down"> $-0.586</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:54%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Arkansas</b> <span style="color:#7d8590;font-size:.75em">AR</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.601</td>
+      <td class="num">$4.028</td>
+      <td class="num">$4.383</td>
+      <td class="num">$4.989</td>
+      <td class="num down"> $-0.510</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:55%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Georgia</b> <span style="color:#7d8590;font-size:.75em">GA</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.623</td>
+      <td class="num">$4.061</td>
+      <td class="num">$4.481</td>
+      <td class="num">$5.013</td>
+      <td class="num down"> $-0.488</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:56%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>North Dakota</b> <span style="color:#7d8590;font-size:.75em">ND</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.646</td>
+      <td class="num">$4.004</td>
+      <td class="num">$4.428</td>
+      <td class="num">$4.790</td>
+      <td class="num down"> $-0.465</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:56%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Missouri</b> <span style="color:#7d8590;font-size:.75em">MO</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.657</td>
+      <td class="num">$4.046</td>
+      <td class="num">$4.368</td>
+      <td class="num">$4.801</td>
+      <td class="num down"> $-0.454</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:56%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Texas</b> <span style="color:#7d8590;font-size:.75em">TX</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.681</td>
+      <td class="num">$4.140</td>
+      <td class="num">$4.512</td>
+      <td class="num">$4.973</td>
+      <td class="num down"> $-0.430</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:57%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Louisiana</b> <span style="color:#7d8590;font-size:.75em">LA</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.683</td>
+      <td class="num">$4.085</td>
+      <td class="num">$4.484</td>
+      <td class="num">$5.036</td>
+      <td class="num down"> $-0.428</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:57%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Mississippi</b> <span style="color:#7d8590;font-size:.75em">MS</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.696</td>
+      <td class="num">$4.111</td>
+      <td class="num">$4.515</td>
+      <td class="num">$5.030</td>
+      <td class="num down"> $-0.415</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:57%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Nebraska</b> <span style="color:#7d8590;font-size:.75em">NE</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.703</td>
+      <td class="num">$3.885</td>
+      <td class="num">$4.400</td>
+      <td class="num">$4.790</td>
+      <td class="num down"> $-0.408</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:57%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Iowa</b> <span style="color:#7d8590;font-size:.75em">IA</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.706</td>
+      <td class="num">$3.980</td>
+      <td class="num">$4.570</td>
+      <td class="num">$4.912</td>
+      <td class="num down"> $-0.405</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:57%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Alabama</b> <span style="color:#7d8590;font-size:.75em">AL</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.754</td>
+      <td class="num">$4.192</td>
+      <td class="num">$4.589</td>
+      <td class="num">$5.189</td>
+      <td class="num down"> $-0.357</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:58%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>South Dakota</b> <span style="color:#7d8590;font-size:.75em">SD</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.762</td>
+      <td class="num">$3.916</td>
+      <td class="num">$4.452</td>
+      <td class="num">$4.810</td>
+      <td class="num down"> $-0.349</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:58%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Tennessee</b> <span style="color:#7d8590;font-size:.75em">TN</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.774</td>
+      <td class="num">$4.252</td>
+      <td class="num">$4.631</td>
+      <td class="num">$5.211</td>
+      <td class="num down"> $-0.337</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:58%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Minnesota</b> <span style="color:#7d8590;font-size:.75em">MN</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.782</td>
+      <td class="num">$4.214</td>
+      <td class="num">$4.716</td>
+      <td class="num">$5.018</td>
+      <td class="num down"> $-0.329</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:58%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Indiana</b> <span style="color:#7d8590;font-size:.75em">IN</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.790</td>
+      <td class="num">$4.318</td>
+      <td class="num">$4.810</td>
+      <td class="num">$5.254</td>
+      <td class="num down"> $-0.321</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:58%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>South Carolina</b> <span style="color:#7d8590;font-size:.75em">SC</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.819</td>
+      <td class="num">$4.255</td>
+      <td class="num">$4.662</td>
+      <td class="num">$5.360</td>
+      <td class="num down"> $-0.292</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:59%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Kentucky</b> <span style="color:#7d8590;font-size:.75em">KY</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.848</td>
+      <td class="num">$4.410</td>
+      <td class="num">$4.835</td>
+      <td class="num">$5.092</td>
+      <td class="num down"> $-0.263</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:59%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Wyoming</b> <span style="color:#7d8590;font-size:.75em">WY</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$3.880</td>
+      <td class="num">$4.164</td>
+      <td class="num">$4.445</td>
+      <td class="num">$4.988</td>
+      <td class="num down"> $-0.231</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:60%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>North Carolina</b> <span style="color:#7d8590;font-size:.75em">NC</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.885</td>
+      <td class="num">$4.320</td>
+      <td class="num">$4.718</td>
+      <td class="num">$5.554</td>
+      <td class="num down"> $-0.226</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:60%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>New Mexico</b> <span style="color:#7d8590;font-size:.75em">NM</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$3.901</td>
+      <td class="num">$4.338</td>
+      <td class="num">$4.656</td>
+      <td class="num">$5.257</td>
+      <td class="num down"> $-0.210</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:60%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Ohio</b> <span style="color:#7d8590;font-size:.75em">OH</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.905</td>
+      <td class="num">$4.418</td>
+      <td class="num">$4.930</td>
+      <td class="num">$5.259</td>
+      <td class="num down"> $-0.206</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:60%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Delaware</b> <span style="color:#7d8590;font-size:.75em">DE</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$3.907</td>
+      <td class="num">$4.482</td>
+      <td class="num">$4.798</td>
+      <td class="num">$5.566</td>
+      <td class="num down"> $-0.204</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:60%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Montana</b> <span style="color:#7d8590;font-size:.75em">MT</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$3.922</td>
+      <td class="num">$4.237</td>
+      <td class="num">$4.565</td>
+      <td class="num">$4.970</td>
+      <td class="num down"> $-0.189</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:60%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Wisconsin</b> <span style="color:#7d8590;font-size:.75em">WI</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$3.926</td>
+      <td class="num">$4.414</td>
+      <td class="num">$5.004</td>
+      <td class="num">$4.928</td>
+      <td class="num down"> $-0.185</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:60%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>West Virginia</b> <span style="color:#7d8590;font-size:.75em">WV</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.940</td>
+      <td class="num">$4.357</td>
+      <td class="num">$4.804</td>
+      <td class="num">$5.448</td>
+      <td class="num down"> $-0.171</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:61%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Florida</b> <span style="color:#7d8590;font-size:.75em">FL</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.941</td>
+      <td class="num">$4.384</td>
+      <td class="num">$4.720</td>
+      <td class="num">$5.300</td>
+      <td class="num down"> $-0.170</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:61%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Virginia</b> <span style="color:#7d8590;font-size:.75em">VA</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$3.954</td>
+      <td class="num">$4.408</td>
+      <td class="num">$4.790</td>
+      <td class="num">$5.629</td>
+      <td class="num down"> $-0.157</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:61%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Colorado</b> <span style="color:#7d8590;font-size:.75em">CO</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$3.988</td>
+      <td class="num">$4.402</td>
+      <td class="num">$4.729</td>
+      <td class="num">$5.034</td>
+      <td class="num down"> $-0.123</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:61%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Maryland</b> <span style="color:#7d8590;font-size:.75em">MD</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$4.013</td>
+      <td class="num">$4.603</td>
+      <td class="num">$4.927</td>
+      <td class="num">$5.649</td>
+      <td class="num down"> $-0.098</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:62%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Michigan</b> <span style="color:#7d8590;font-size:.75em">MI</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$4.041</td>
+      <td class="num">$4.577</td>
+      <td class="num">$5.153</td>
+      <td class="num">$5.123</td>
+      <td class="num down"> $-0.070</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:62%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Massachusetts</b> <span style="color:#7d8590;font-size:.75em">MA</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.047</td>
+      <td class="num">$4.605</td>
+      <td class="num">$5.002</td>
+      <td class="num">$5.809</td>
+      <td class="num down"> $-0.064</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:62%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>New Hampshire</b> <span style="color:#7d8590;font-size:.75em">NH</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.074</td>
+      <td class="num">$4.634</td>
+      <td class="num">$5.080</td>
+      <td class="num">$5.739</td>
+      <td class="num down"> $-0.037</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:63%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Rhode Island</b> <span style="color:#7d8590;font-size:.75em">RI</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.082</td>
+      <td class="num">$4.741</td>
+      <td class="num">$5.153</td>
+      <td class="num">$5.688</td>
+      <td class="num down"> $-0.029</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:63%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>New Jersey</b> <span style="color:#7d8590;font-size:.75em">NJ</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.087</td>
+      <td class="num">$4.573</td>
+      <td class="num">$4.868</td>
+      <td class="num">$5.669</td>
+      <td class="num down"> $-0.024</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:63%;background:#3fb950"></div></div></td>
+    </tr><tr>
+      <td><b>Vermont</b> <span style="color:#7d8590;font-size:.75em">VT</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.136</td>
+      <td class="num">$4.598</td>
+      <td class="num">$5.067</td>
+      <td class="num">$5.734</td>
+      <td class="num up">+ $0.025</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:64%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Utah</b> <span style="color:#7d8590;font-size:.75em">UT</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$4.159</td>
+      <td class="num">$4.428</td>
+      <td class="num">$4.686</td>
+      <td class="num">$5.305</td>
+      <td class="num up">+ $0.048</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:64%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Pennsylvania</b> <span style="color:#7d8590;font-size:.75em">PA</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.167</td>
+      <td class="num">$4.582</td>
+      <td class="num">$4.965</td>
+      <td class="num">$5.968</td>
+      <td class="num up">+ $0.056</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:64%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Maine</b> <span style="color:#7d8590;font-size:.75em">ME</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.179</td>
+      <td class="num">$4.753</td>
+      <td class="num">$5.218</td>
+      <td class="num">$5.805</td>
+      <td class="num up">+ $0.068</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:64%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>New York</b> <span style="color:#7d8590;font-size:.75em">NY</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.186</td>
+      <td class="num">$4.672</td>
+      <td class="num">$5.055</td>
+      <td class="num">$5.912</td>
+      <td class="num up">+ $0.075</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:64%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Connecticut</b> <span style="color:#7d8590;font-size:.75em">CT</span></td>
+      <td><span class="pill rn">Northeast</span></td>
+      <td class="num">$4.219</td>
+      <td class="num">$4.716</td>
+      <td class="num">$5.118</td>
+      <td class="num">$5.813</td>
+      <td class="num up">+ $0.108</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:65%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>DC</b> <span style="color:#7d8590;font-size:.75em">DC</span></td>
+      <td><span class="pill rs">South</span></td>
+      <td class="num">$4.303</td>
+      <td class="num">$4.857</td>
+      <td class="num">$5.328</td>
+      <td class="num">$5.815</td>
+      <td class="num up">+ $0.192</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:66%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Idaho</b> <span style="color:#7d8590;font-size:.75em">ID</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$4.330</td>
+      <td class="num">$4.594</td>
+      <td class="num">$4.863</td>
+      <td class="num">$5.446</td>
+      <td class="num up">+ $0.219</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:67%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Illinois</b> <span style="color:#7d8590;font-size:.75em">IL</span></td>
+      <td><span class="pill rm">Midwest</span></td>
+      <td class="num">$4.330</td>
+      <td class="num">$4.875</td>
+      <td class="num">$5.355</td>
+      <td class="num">$5.300</td>
+      <td class="num up">+ $0.219</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:67%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Arizona</b> <span style="color:#7d8590;font-size:.75em">AZ</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$4.636</td>
+      <td class="num">$5.009</td>
+      <td class="num">$5.325</td>
+      <td class="num">$5.827</td>
+      <td class="num up">+ $0.525</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:71%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Alaska</b> <span style="color:#7d8590;font-size:.75em">AK</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$4.801</td>
+      <td class="num">$5.003</td>
+      <td class="num">$5.261</td>
+      <td class="num">$5.928</td>
+      <td class="num up">+ $0.690</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:74%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Nevada</b> <span style="color:#7d8590;font-size:.75em">NV</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$5.030</td>
+      <td class="num">$5.324</td>
+      <td class="num">$5.634</td>
+      <td class="num">$6.123</td>
+      <td class="num up">+ $0.919</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:77%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Oregon</b> <span style="color:#7d8590;font-size:.75em">OR</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$5.071</td>
+      <td class="num">$5.268</td>
+      <td class="num">$5.562</td>
+      <td class="num">$6.211</td>
+      <td class="num up">+ $0.960</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:78%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Washington</b> <span style="color:#7d8590;font-size:.75em">WA</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$5.475</td>
+      <td class="num">$5.700</td>
+      <td class="num">$5.960</td>
+      <td class="num">$6.840</td>
+      <td class="num up">+ $1.364</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:84%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>Hawaii</b> <span style="color:#7d8590;font-size:.75em">HI</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$5.655</td>
+      <td class="num">$5.899</td>
+      <td class="num">$6.117</td>
+      <td class="num">$7.082</td>
+      <td class="num up">+ $1.544</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:87%;background:#f85149"></div></div></td>
+    </tr><tr>
+      <td><b>California</b> <span style="color:#7d8590;font-size:.75em">CA</span></td>
+      <td><span class="pill rw">West</span></td>
+      <td class="num">$5.949</td>
+      <td class="num">$6.172</td>
+      <td class="num">$6.367</td>
+      <td class="num">$7.477</td>
+      <td class="num up">+ $1.838</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:92%;background:#f85149"></div></div></td>
+    </tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ REGIONS ══ -->
+<div id="regions" class="content">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#1f6feb"></span>West Region</div>
+      <table class="tbl" id="tbl-west"><tbody><tr><th>State</th><th class="num">Regular</th><th class="num">Diesel</th><th class="num">vs Avg</th></tr><tr><td><b>Wyoming</b> (WY)</td><td class="num">$3.880</td>
+        <td class="num">$4.988</td>
+        <td class="num down">$-0.231</td></tr><tr><td><b>New Mexico</b> (NM)</td><td class="num">$3.901</td>
+        <td class="num">$5.257</td>
+        <td class="num down">$-0.210</td></tr><tr><td><b>Montana</b> (MT)</td><td class="num">$3.922</td>
+        <td class="num">$4.970</td>
+        <td class="num down">$-0.189</td></tr><tr><td><b>Colorado</b> (CO)</td><td class="num">$3.988</td>
+        <td class="num">$5.034</td>
+        <td class="num down">$-0.123</td></tr><tr><td><b>Utah</b> (UT)</td><td class="num">$4.159</td>
+        <td class="num">$5.305</td>
+        <td class="num up">+$0.048</td></tr><tr><td><b>Idaho</b> (ID)</td><td class="num">$4.330</td>
+        <td class="num">$5.446</td>
+        <td class="num up">+$0.219</td></tr><tr><td><b>Arizona</b> (AZ)</td><td class="num">$4.636</td>
+        <td class="num">$5.827</td>
+        <td class="num up">+$0.525</td></tr><tr><td><b>Alaska</b> (AK)</td><td class="num">$4.801</td>
+        <td class="num">$5.928</td>
+        <td class="num up">+$0.690</td></tr><tr><td><b>Nevada</b> (NV)</td><td class="num">$5.030</td>
+        <td class="num">$6.123</td>
+        <td class="num up">+$0.919</td></tr><tr><td><b>Oregon</b> (OR)</td><td class="num">$5.071</td>
+        <td class="num">$6.211</td>
+        <td class="num up">+$0.960</td></tr><tr><td><b>Washington</b> (WA)</td><td class="num">$5.475</td>
+        <td class="num">$6.840</td>
+        <td class="num up">+$1.364</td></tr><tr><td><b>Hawaii</b> (HI)</td><td class="num">$5.655</td>
+        <td class="num">$7.082</td>
+        <td class="num up">+$1.544</td></tr><tr><td><b>California</b> (CA)</td><td class="num">$5.949</td>
+        <td class="num">$7.477</td>
+        <td class="num up">+$1.838</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#d29922"></span>South Region</div>
+      <table class="tbl" id="tbl-south"><tbody><tr><th>State</th><th class="num">Regular</th><th class="num">Diesel</th><th class="num">vs Avg</th></tr><tr><td><b>Oklahoma</b> (OK)</td><td class="num">$3.500</td>
+        <td class="num">$4.674</td>
+        <td class="num down">$-0.611</td></tr><tr><td><b>Arkansas</b> (AR)</td><td class="num">$3.601</td>
+        <td class="num">$4.989</td>
+        <td class="num down">$-0.510</td></tr><tr><td><b>Georgia</b> (GA)</td><td class="num">$3.623</td>
+        <td class="num">$5.013</td>
+        <td class="num down">$-0.488</td></tr><tr><td><b>Texas</b> (TX)</td><td class="num">$3.681</td>
+        <td class="num">$4.973</td>
+        <td class="num down">$-0.430</td></tr><tr><td><b>Louisiana</b> (LA)</td><td class="num">$3.683</td>
+        <td class="num">$5.036</td>
+        <td class="num down">$-0.428</td></tr><tr><td><b>Mississippi</b> (MS)</td><td class="num">$3.696</td>
+        <td class="num">$5.030</td>
+        <td class="num down">$-0.415</td></tr><tr><td><b>Alabama</b> (AL)</td><td class="num">$3.754</td>
+        <td class="num">$5.189</td>
+        <td class="num down">$-0.357</td></tr><tr><td><b>Tennessee</b> (TN)</td><td class="num">$3.774</td>
+        <td class="num">$5.211</td>
+        <td class="num down">$-0.337</td></tr><tr><td><b>South Carolina</b> (SC)</td><td class="num">$3.819</td>
+        <td class="num">$5.360</td>
+        <td class="num down">$-0.292</td></tr><tr><td><b>Kentucky</b> (KY)</td><td class="num">$3.848</td>
+        <td class="num">$5.092</td>
+        <td class="num down">$-0.263</td></tr><tr><td><b>North Carolina</b> (NC)</td><td class="num">$3.885</td>
+        <td class="num">$5.554</td>
+        <td class="num down">$-0.226</td></tr><tr><td><b>West Virginia</b> (WV)</td><td class="num">$3.940</td>
+        <td class="num">$5.448</td>
+        <td class="num down">$-0.171</td></tr><tr><td><b>Florida</b> (FL)</td><td class="num">$3.941</td>
+        <td class="num">$5.300</td>
+        <td class="num down">$-0.170</td></tr><tr><td><b>Virginia</b> (VA)</td><td class="num">$3.954</td>
+        <td class="num">$5.629</td>
+        <td class="num down">$-0.157</td></tr><tr><td><b>Maryland</b> (MD)</td><td class="num">$4.013</td>
+        <td class="num">$5.649</td>
+        <td class="num down">$-0.098</td></tr><tr><td><b>DC</b> (DC)</td><td class="num">$4.303</td>
+        <td class="num">$5.815</td>
+        <td class="num up">+$0.192</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#3fb950"></span>Midwest Region</div>
+      <table class="tbl" id="tbl-midwest"><tbody><tr><th>State</th><th class="num">Regular</th><th class="num">Diesel</th><th class="num">vs Avg</th></tr><tr><td><b>Kansas</b> (KS)</td><td class="num">$3.525</td>
+        <td class="num">$4.709</td>
+        <td class="num down">$-0.586</td></tr><tr><td><b>North Dakota</b> (ND)</td><td class="num">$3.646</td>
+        <td class="num">$4.790</td>
+        <td class="num down">$-0.465</td></tr><tr><td><b>Missouri</b> (MO)</td><td class="num">$3.657</td>
+        <td class="num">$4.801</td>
+        <td class="num down">$-0.454</td></tr><tr><td><b>Nebraska</b> (NE)</td><td class="num">$3.703</td>
+        <td class="num">$4.790</td>
+        <td class="num down">$-0.408</td></tr><tr><td><b>Iowa</b> (IA)</td><td class="num">$3.706</td>
+        <td class="num">$4.912</td>
+        <td class="num down">$-0.405</td></tr><tr><td><b>South Dakota</b> (SD)</td><td class="num">$3.762</td>
+        <td class="num">$4.810</td>
+        <td class="num down">$-0.349</td></tr><tr><td><b>Minnesota</b> (MN)</td><td class="num">$3.782</td>
+        <td class="num">$5.018</td>
+        <td class="num down">$-0.329</td></tr><tr><td><b>Indiana</b> (IN)</td><td class="num">$3.790</td>
+        <td class="num">$5.254</td>
+        <td class="num down">$-0.321</td></tr><tr><td><b>Ohio</b> (OH)</td><td class="num">$3.905</td>
+        <td class="num">$5.259</td>
+        <td class="num down">$-0.206</td></tr><tr><td><b>Wisconsin</b> (WI)</td><td class="num">$3.926</td>
+        <td class="num">$4.928</td>
+        <td class="num down">$-0.185</td></tr><tr><td><b>Michigan</b> (MI)</td><td class="num">$4.041</td>
+        <td class="num">$5.123</td>
+        <td class="num down">$-0.070</td></tr><tr><td><b>Illinois</b> (IL)</td><td class="num">$4.330</td>
+        <td class="num">$5.300</td>
+        <td class="num up">+$0.219</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#a371f7"></span>Northeast Region</div>
+      <table class="tbl" id="tbl-northeast"><tbody><tr><th>State</th><th class="num">Regular</th><th class="num">Diesel</th><th class="num">vs Avg</th></tr><tr><td><b>Delaware</b> (DE)</td><td class="num">$3.907</td>
+        <td class="num">$5.566</td>
+        <td class="num down">$-0.204</td></tr><tr><td><b>Massachusetts</b> (MA)</td><td class="num">$4.047</td>
+        <td class="num">$5.809</td>
+        <td class="num down">$-0.064</td></tr><tr><td><b>New Hampshire</b> (NH)</td><td class="num">$4.074</td>
+        <td class="num">$5.739</td>
+        <td class="num down">$-0.037</td></tr><tr><td><b>Rhode Island</b> (RI)</td><td class="num">$4.082</td>
+        <td class="num">$5.688</td>
+        <td class="num down">$-0.029</td></tr><tr><td><b>New Jersey</b> (NJ)</td><td class="num">$4.087</td>
+        <td class="num">$5.669</td>
+        <td class="num down">$-0.024</td></tr><tr><td><b>Vermont</b> (VT)</td><td class="num">$4.136</td>
+        <td class="num">$5.734</td>
+        <td class="num up">+$0.025</td></tr><tr><td><b>Pennsylvania</b> (PA)</td><td class="num">$4.167</td>
+        <td class="num">$5.968</td>
+        <td class="num up">+$0.056</td></tr><tr><td><b>Maine</b> (ME)</td><td class="num">$4.179</td>
+        <td class="num">$5.805</td>
+        <td class="num up">+$0.068</td></tr><tr><td><b>New York</b> (NY)</td><td class="num">$4.186</td>
+        <td class="num">$5.912</td>
+        <td class="num up">+$0.075</td></tr><tr><td><b>Connecticut</b> (CT)</td><td class="num">$4.219</td>
+        <td class="num">$5.813</td>
+        <td class="num up">+$0.108</td></tr></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FUEL TYPES ══ -->
+<div id="fuels" class="content">
+  <div class="kpi-row" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi" style="--clr:#58a6ff"><div class="kpi-label">Regular</div><div class="kpi-val">$4.111</div><div class="kpi-sub">↑ $0.069 from week ago</div></div>
+    <div class="kpi" style="--clr:#a371f7"><div class="kpi-label">Mid-Grade</div><div class="kpi-val">$4.592</div><div class="kpi-sub">↑ $0.058 from week ago</div></div>
+    <div class="kpi" style="--clr:#d29922"><div class="kpi-label"><b>Delaware</b> (DE)</td><td class="num">$3.907</td>
+        <td class="num">$5.566</td>
+        <td class="num down">$-0.204</td></tr><tr><td><b>Massachusetts</b> (MA)</td><td class="num">$4.047</td>
+        <td class="num">$5.809</td>
+        <td class="num down">$-0.064</td></tr><tr><td><b>New Hampshire</b> (NH)</td><td class="num">$4.074</td>
+        <td class="num">$5.739</td>
+        <td class="num down">$-0.037</td></tr><tr><td><b>Rhode Island</b> (RI)</td><td class="num">$4.082</td>
+        <td class="num">$5.688</td>
+        <td class="num down">$-0.029</td></tr><tr><td><b>New Jersey</b> (NJ)</td><td class="num">$4.087</td>
+        <td class="num">$5.669</td>
+        <td class="num down">$-0.024</td></tr><tr><td><b>Vermont</b> (VT)</td><td class="num">$4.136</td>
+        <td class="num">$5.734</td>
+        <td class="num up">+$0.025</td></tr><tr><td><b>Pennsylvania</b> (PA)</td><td class="num">$4.167</td>
+        <td class="num">$5.968</td>
+        <td class="num up">+$0.056</td></tr><tr><td><b>Maine</b> (ME)</td><td class="num">$4.179</td>
+        <td class="num">$5.805</td>
+        <td class="num up">+$0.068</td></tr><tr><td><b>New York</b> (NY)</td><td class="num">$4.186</td>
+        <td class="num">$5.912</td>
+        <td class="num up">+$0.075</td></tr><tr><td><b>Connecticut</b> (CT)</td><td class="num">$4.219</td>
+        <td class="num">$5.813</td>
+        <td class="num up">+$0.108</td></tr></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FUEL TYPES ══ -->
+<div id="fuels" class="content">
+  <div class="kpi-row" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi" style="--clr:#58a6ff"><div class="kpi-label">Regular</div><div class="kpi-val">$4.111</div><div class="kpi-sub">↑ $0.069 from week ago</div></div>
+    <div class="kpi" style="--clr:#a371f7"><div class="kpi-label">Mid-Grade</div><div class="kpi-val">$4.592</div><div class="kpi-sub">↑ $0.058 from week ago</div></div>
+    <div class="kpi" style="--clr:#d29922"><div class="kpi-label">Premium</div><div class="kpi-val">$4.838</div><div class="kpi-sub">↑ $0.077 from week ago</div></div>
+    <div class="kpi" style="--clr:#f85149"><div class="kpi-label">Diesel</div><div class="kpi-val">$5.442</div><div class="kpi-sub">↑ $0.098 from week ago</div></div>
+    <div class="kpi" style="--clr:#d4a574"><div class="kpi-label">E85</div><div class="kpi-val">$3.821</div><div class="kpi-sub">↑ $0.061 from week ago</div></div>
+  </div>
+  <div style="margin-bottom:16px">
+    <div class="card-title">Average Gas Prices by Fuel Type</div>
+    <canvas id="fuelChart" width="12" height="5"></canvas>
+  </div>
+</div>
+
+<!-- ══ TRENDS ══ -->
+<div id="trends" class="content">
+  <div class="card-title">4-Week Gas Price Trends</div>
+  <canvas id="trendChart" width="12" height="5"></canvas>
+</div>
+
+</div>
+
+<script>
+function getColor(name){const colors={Regular:"#58a6ff",Midgrade:"#a371f7",Premium:"#d29922",Diesel:"#f85149",E85:"#d4a574"};return colors[name]||"#999";}
+const data={regular:[3.911,3.980,4.042,4.111],midgrade:[4.474,4.534,4.563,4.592],premium:[4.761,4.820,4.831,4.838],diesel:[5.246,5.346,5.394,5.442],e85:[3.698,3.759,3.798,3.821]};function buildFuelCharts(){const ctx=document.getElementById("fuelChart");if(!ctx)return;new Chart(ctx,{type:"bar",data:{labels:["Regular","Mid-Grade","Premium","Diesel","E85"],datasets:[{label:"Current Price",data:[4.111,4.592,4.838,5.442,3.821],backgroundColor:["#58a6ff","#a371f7","#d29922","#f85149","#d4a574"]}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:function(v){return"$"+v.toFixed(2)}}}}}});}
+function buildTrendCharts(){const ctx=document.getElementById("trendChart");if(!ctx)return;new Chart(ctx,{type:"line",data:{labels:["1 Week Ago","2 Weeks Ago","3 Weeks Ago","Today"],datasets:[{label:"Regular",data:data.regular,borderColor:getColor("Regular"),backgroundColor:getColor("Regular")+"30",tension:0.4},{label:"Mid-Grade",data:data.midgrade,borderColor:getColor("Midgrade"),backgroundColor:getColor("Midgrade")+"30",tension:0.4},{label:"Premium",data:data.premium,borderColor:getColor("Premium"),backgroundColor:getColor("Premium")+"30",tension:0.4},{label:"Diesel",data:data.diesel,borderColor:getColor("Diesel"),backgroundColor:getColor("Diesel")+"30",tension:0.4}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:true,position:"top"}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return"$"+v.toFixed(2)}}}}}});}
+let navItems=document.querySelectorAll("[data-nav]"),contentSections=document.querySelectorAll(".content");navItems.forEach(item=>item.addEventListener("click",function(){const name=this.getAttribute("data-nav");contentSections.forEach(s=>s.style.display="none");const target=document.getElementById(name);if(target)target.style.display="block";if(name==="fuels")buildFuelCharts();if(name==="trends")buildTrendCharts();});
+</script>
+
+
+</body></html>up">+$1.838</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#d29922"></span>South Region</div>
+      <table class="tbl" id="tbl-south"><tbody><tr><th>State</th><th class="num">Regular</th><th class="num">Diesel</th><th class="num">vs Avg</th></tr><tr><td><b>Oklahoma</b> (OK)</td><td class="num">$3.500</td>
+        <td class="num">$4.674</td>
+        <td class="num down">$-0.611</td></tr><tr><td><b>Arkansas</b> (AR)</td><td class="num">$3.601</td>
+        <td class="num">$4.989</td>
+        <td class="num down">$-0.510</td></tr><tr><td><b>Georgia</b> (GA)</td><td class="num">$3.623</td>
+        <td class="num">$5.013</td>
+        <td class="num down">$-0.488</td></tr><tr><td><b>Texas</b> (TX)</td><td class="num">$3.681</td>
+        <td class="num">$4.973</td>
+        <td class="num down">$-0.430</td></tr><tr><td><b>Louisiana</b> (LA)</td><td class="num">$3.683</td>
+        <td class="num">$5.036</td>
+        <td class="num down">$-0.428</td></tr><tr><td><b>Mississippi</b> (MS)</td><td class="num">$3.696</td>
+        <td class="num">$5.030</td>
+        <td class="num down">$-0.415</td></tr><tr><td><b>Alabama</b> (AL)</td><td class="num">$3.754</td>
+        <td class="num">$5.189</td>
+        <td class="num down">$-0.357</td></tr><tr><td><b>Tennessee</b> (TN)</td><td class="num">$3.774</td>
+        <td class="num">$5.211</td>
+        <td class="num down">$-0.337</td></tr><tr><td><b>South Carolina</b> (SC)</td><td class="num">$3.819</td>
+        <td class="num">$5.360</td>
+        <td class="num down">$-0.292</td></tr><tr><td><b>Kentucky</b> (KY)</td><td class="num">$3.848</td>
+        <td class="num">$5.092</td>
+        <td class="num down">$-0.263</td></tr><tr><td><b>North Carolina</b> (NC)</td><td class="num">$3.885</td>
+        <td class="num">$5.554</td>
+        <td class="num down">$-0.226</td></tr><tr><td><b>West Virginia</b> (WV)</td><td class="num">$3.940</td>
+        <td class="num">$5.448</td>
+        <td class="num down">$-0.171</td></tr><tr><td><b>Florida</b> (FL)</td><td class="num">$3.941</td>
+        <td class="num">$5.300</td>
+        <td class="num down">$-0.170</td></tr><tr><td><b>Virginia</b> (VA)</td><td class="num">$3.954</td>
+        <td class="num">$5.629</td>
+        <td class="num down">$-0.157</td></tr><tr><td><b>Maryland</b> (MD)</td><td class="num">$4.013</td>
+        <td class="num">$5.649</td>
+        <td class="num down">$-0.098</td></tr><tr><td><b>DC</b> (DC)</td><td class="num">$4.303</td>
+        <td class="num">$5.815</td>
+        <td class="num up">+$0.192</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#3fb950"></span>Midwest Region</div>
+      <table class="tbl" id="tbl-midwest"><tbody><tr><th>State</th><th class="num">Regular</th><th class="num">Diesel</th><th class="num">vs Avg</th></tr><tr><td><b>Kansas</b> (KS)</td><td class="num">$3.525</td>
+        <td class="num">$4.709</td>
+        <td class="num down">$-0.586</td></tr><tr><td><b>North Dakota</b> (ND)</td><td class="num">$3.646</td>
+        <td class="num">$4.790</td>
+        <td class="num down">$-0.465</td></tr><tr><td><b>Missouri</b> (MO)</td><td class="num">$3.657</td>
+        <td class="num">$4.801</td>
+        <td class="num down">$-0.454</td></tr><tr><td><b>Nebraska</b> (NE)</td><td class="num">$3.703</td>
+        <td class="num">$4.790</td>
+        <td class="num down">$-0.408</td></tr><tr><td><b>Iowa</b> (IA)</td><td class="num">$3.706</td>
+        <td class="num">$4.912</td>
+        <td class="num down">$-0.405</td></tr><tr><td><b>South Dakota</b> (SD)</td><td class="num">$3.762</td>
+        <td class="num">$4.810</td>
+        <td class="num down">$-0.349</td></tr><tr><td><b>Minnesota</b> (MN)</td><td class="num">$3.782</td>
+        <td class="num">$5.018</td>
+        <td class="num down">$-0.329</td></tr><tr><td><b>Indiana</b> (IN)</td><td class="num">$3.790</td>
+        <td class="num">$5.254</td>
+        <td class="num down">$-0.321</td></tr><tr><td><b>Ohio</b> (OH)</td><td class="num">$3.905</td>
+        <td class="num">$5.259</td>
+        <td class="num down">$-0.206</td></tr><tr><td><b>Wisconsin</b> (WI)</td><td class="num">$3.926</td>
+        <td class="num">$4.928</td>
+        <td class="num down">$-0.185</td></tr><tr><td><b>Michigan</b> (MI)</td><td class="num">$4.041</td>
+        <td class="num">$5.123</td>
+        <td class="num down">$-0.070</td></tr><tr><td><b>Illinois</b> (IL)</td><td class="num">$4.330</td>
+        <td class="num">$5.300</td>
+        <td class="num up">+$0.219</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#a371f7"></span>Northeast Region</div>
+      <table class="tbl" id="tbl-northeast"><tbody><tr><th>State</th><th class="num">Regular</th><th class="num">Diesel</th><th class="num">vs Avg</th></tr><tr><td><b>Delaware</b> (DE)</td><td class="num">$3.907</td>
+        <td class="num">$5.566</td>
+        <td class="num down">$-0.204</td></tr><tr><td><b>Massachusetts</b> (MA)</td><td class="num">$4.047</td>
+        <td class="num">$5.809</td>
+        <td class="num down">$-0.064</td></tr><tr><td><b>New Hampshire</b> (NH)</td><td class="num">$4.074</td>
+        <td class="num">$5.739</td>
+        <td class="num down">$-0.037</td></tr><tr><td><b>Rhode Island</b> (RI)</td><td class="num">$4.082</td>
+        <td class="num">$5.688</td>
+        <td class="num down">$-0.029</td></tr><tr><td><b>New Jersey</b> (NJ)</td><td class="num">$4.087</td>
+        <td class="num">$5.669</td>
+        <td class="num down">$-0.024</td></tr><tr><td><b>Vermont</b> (VT)</td><td class="num">$4.136</td>
+        <td class="num">$5.734</td>
+        <td class="num up">+$0.025</td></tr><tr><td><b>Pennsylvania</b> (PA)</td><td class="num">$4.167</td>
+        <td class="num">$5.968</td>
+        <td class="num up">+$0.056</td></tr><tr><td><b>Maine</b> (ME)</td><td class="num">$4.179</td>
+        <td class="num">$5.805</td>
+        <td class="num up">+$0.068</td></tr><tr><td><b>New York</b> (NY)</td><td class="num">$4.186</td>
+        <td class="num">$5.912</td>
+        <td class="num up">+$0.075</td></tr><tr><td><b>Connecticut</b> (CT)</td><td class="num">$4.219</td>
+        <td class="num">$5.813</td>
+        <td class="num up">+$0.108</td></tr></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FUEL TYPES ══ -->
+<div id="fuels" class="content">
+  <div class="kpi-row" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi" style="--clr:#58a6ff"><div class="kpi-label">Regular</div><div class="kpi-val">$4.111</div><div class="kpi-sub">↑ $0.069 from week ago</div></div>
+    <div class="kpi" style="--clr:#a371f7"><div class="kpi-label">Mid-Grade</div><div class="kpi-val">$4.592</div><div class="kpi-sub">↑ $0.058 from week ago</div></div>
+    <div class="kpi" style="--clr:#d29922"><div class="kpi-label">owerCase();
+  const region = document.getElementById('region-filter').value;
+  const sort = document.getElementById('sort-filter').value;
+  let data = STATES.filter(s=>
+    (s[0].toLowerCase().includes(q)||s[1].toLowerCase().includes(q)) &&
+    (!region || s[2]===region)
+  );
+  if(sort==='reg-asc') data.sort((a,b)=>a[3]-b[3]);
+  else if(sort==='reg-desc') data.sort((a,b)=>b[3]-a[3]);
+  else data.sort((a,b)=>a[0].localeCompare(b[0]));
+  renderStatesTable(data);
+}
+
+// ── Region tables ──
+function buildRegionTable(region, elId){
+  const data = STATES.filter(s=>s[2]===region).sort((a,b)=>a[3]-b[3]);
+  const el = document.getElementById(elId);
+  el.innerHTML = `<tr><th>State</th><th class="num">Regular</th><th class="num">Diesel</th><th class="num">vs Avg</th></tr>` +
+    data.map(s=>{
+      const d = (s[3]-NAT).toFixed(3);
+      return `<tr><td><b>${s[0]}</b> (${s[1]})</td><td class="num">$${s[3].toFixed(3)}</td>
+        <td class="num">$${s[6].toFixed(3)}</td>
+        <td class="num ${s[3]>NAT?'up':'down'}">${s[3]>NAT?'+':''}$${d}</td></tr>`;
+    }).join('');
+}
+['West','South','Midwest','Northeast'].forEach(r=>buildRegionTable(r,'tbl-'+r.toLowerCase()));
+
+// ── Fuels tab ──
+const periods = ['Today','Yesterday','Week Ago','Month Ago','Year Ago'];
+const fuelData = {
+  Regular:   [4.111,4.099,4.042,3.978,3.149],
+  'Mid-Grade':[4.592,4.595,4.534,4.502,3.626],
+  Premium:   [4.969,4.965,4.911,4.866,3.980],
+  Diesel:    [5.449,5.464,5.531,5.380,3.552],
+  E85:       [3.213,3.207,3.158,3.154,2.578],
+};
+const fuelColors = {Regular:'#58a6ff','Mid-Grade':'#a371f7',Premium:'#d29922',Diesel:'#f85149',E85:'#3fb950'};
+
+let fuelTrendBuilt=false;
+function buildFuelCharts(){
+  if(fuelTrendBuilt)return; fuelTrendBuilt=true;
+  mk('c_fuel_trend','line',periods,
+    Object.entries(fuelData).map(([f,d])=>({label:f,data:d,borderColor:fuelColors[f],
+      backgroundColor:'transparent',tension:.3,pointRadius:4,borderWidth:2})));
+  const spreads = STATES.map(s=>[s[0],s[1],(s[5]-s[3]).toFixed(3)]).sort((a,b)=>b[2]-a[2]).slice(0,10);
+  mk('c_spread','bar',spreads.map(s=>s[1]),
+    [{label:'Premium−Regular Spread',data:spreads.map(s=>+s[2]),
+      backgroundColor:'#d29922'}],
+    {plugins:{legend:{display:false}}});
+}
+
+// ── Trends tab ──
+let trendsBuilt=false;
+function buildTrendCharts(){
+  if(trendsBuilt)return; trendsBuilt=true;
+  const allSorted = [...STATES].sort((a,b)=>a[3]-b[3]);
+  mk('c_all_states','bar',allSorted.map(s=>s[1]),
+    [{label:'Regular ($/gal)',data:allSorted.map(s=>s[3]),
+      backgroundColor:allSorted.map(s=>s[3]>NAT?'#f85149':'#3fb950')}],
+    {plugins:{legend:{display:false}},
+     scales:{x:{ticks:{color:'#7d8590',font:{size:8}},grid:{color:'#21262d'}},
+             y:{min:3.2,ticks:{color:'#7d8590'},grid:{color:'#21262d'}}}});
+
+  const below = [...STATES].filter(s=>s[3]<NAT).sort((a,b)=>a[3]-b[3]);
+  const above = [...STATES].filter(s=>s[3]>=NAT).sort((a,b)=>b[3]-a[3]);
+  const mkTbl = (id,data,cls)=>{
+    document.getElementById(id).innerHTML =
+      `<tr><th>State</th><th class="num">Regular</th><th class="num">vs Avg</th></tr>`+
+      data.map(s=>`<tr><td><b>${s[0]}</b></td><td class="num">$${s[3].toFixed(3)}</td>
+        <td class="num ${cls}">${cls==='down'?'−':'+'}$${Math.abs(s[3]-NAT).toFixed(3)}</td></tr>`).join('');
+  };
+  mkTbl('tbl-below',below,'down');
+  mkTbl('tbl-above',above,'up');
+}
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  const tabs=['overview','states','regions','fuels','trends'];
+  document.querySelectorAll('.tab')[tabs.indexOf(name)].classList.add('active');
+  document.getElementById(name).classList.add('active');
+  if(name==='fuels') buildFuelCharts();
+  if(name==='trends') buildTrendCharts();
+}
+</script>
+
+
+</body></html>
