@@ -160,7 +160,9 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
 .gg-show2{display:block}
 
 .gg-img3{width:100%;display:none;border-radius:6px}
-.gg-show3{display:block}</style>
+.gg-show3{display:block}
+.gg-img4{width:100%;display:none;border-radius:6px}
+.gg-show4{display:block}</style>
 </head>
 <body>
 
@@ -397,39 +399,69 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
     </div>
   </div>
 
-  <!-- ── P6: CAPSIM ── -->
+    <!-- ── P6: SPIRIT AIRLINES ── -->
   <div class="project-block flip">
-    <div class="proj-narrative">
-      <span class="proj-tag">Business Simulation · Strategy</span>
-      <span class="proj-num">06</span>
-      <h3 class="proj-title">What breaks first when strategy and operations fall out of sync?</h3>
-      <p class="proj-story">Capsim GlobalDNA simulates a real market — real competitors, real consequences every round. The lesson it forces is one most business plans skip: you can have the right strategy and still lose if your production doesn't match your pricing, and your pricing doesn't match where demand actually is.</p>
-      <div class="proj-insight">
-        <p><strong>The discipline:</strong> Teams using a Balanced Scorecard — tracking customer, operational, and financial KPIs together — consistently adapted faster and avoided the margin traps that sank teams optimizing a single metric.</p>
-      </div>
-      <div class="proj-tools">
-        <span class="proj-tool">Capsim GlobalDNA</span><span class="proj-tool">Balanced Scorecard</span>
-        <span class="proj-tool">Competitive Strategy</span><span class="proj-tool">Financial Modeling</span>
-      </div>
-    </div>
-    <div class="dashboard-panel">
-      <div class="dash-header">
-        <span class="dash-title-text">Balanced Scorecard · GlobalDNA Simulation</span>
-        <div class="dash-dots"><div class="dash-dot"></div><div class="dash-dot"></div><div class="dash-dot"></div></div>
-      </div>
-      <div class="dash-body">
-        <div class="dash-stats">
-          <div class="dash-stat"><span class="ds-val">82</span><span class="ds-label">Customer Score</span></div>
-          <div class="dash-stat"><span class="ds-val">91%</span><span class="ds-label">Production Eff.</span></div>
-          <div class="dash-stat"><span class="ds-val">$4.2M</span><span class="ds-label">Net Profit</span></div>
+      <div class="proj-narrative">
+        <span class="proj-tag">Aviation · Financial Analysis</span>
+        <span class="proj-num">06</span>
+        <h3 class="proj-title">Spirit Airlines — Ceased Operations Analysis</h3>
+        <p class="proj-story">A comprehensive 34-year autopsy of Spirit Airlines' collapse — from ULCC pioneer to double bankruptcy and full shutdown on May 2, 2026. Traced $2.5B+ in cumulative losses, the DOJ-blocked JetBlue merger, and the cascade of failures that stranded 1.8M passengers.</p>
+        <div class="proj-insight">
+          <p><strong>Key finding:</strong> COVID-19 devastation, an $8.1B debt load, and a blocked $3.8B lifeline left no recovery path. Post-shutdown, fares on Spirit routes rose 23% as Frontier absorbed 100+ routes overnight.</p>
         </div>
-        <div class="chart-wrap-tall"><canvas id="chart-capsim"></canvas></div>
-        <div class="dash-upload-slot">
-          <a class="view-dash-link" href="#" onclick="return false">View Full Dashboard &nbsp;→</a>
+        <div class="proj-tools">
+          <span class="proj-tool">Excel</span>
+          <span class="proj-tool">Power BI</span>
+          <span class="proj-tool">Financial Modeling</span>
+          <span class="proj-tool">Aviation Analytics</span>
         </div>
       </div>
-    </div>
-  </div>
+      <div class="dashboard-panel">
+        <div class="dash-header">
+          <span class="dash-title-text">Spirit Airlines Analytics · CEASED OPS</span>
+          <div class="dash-dots">
+            <div class="dash-dot"></div>
+            <div class="dash-dot"></div>
+            <div class="dash-dot"></div>
+          </div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-stats">
+            <div class="dash-stat">
+              <span class="ds-val">$5.4B</span>
+              <span class="ds-label">Peak Revenue</span>
+            </div>
+            <div class="dash-stat">
+              <span class="ds-val">$2.5B+</span>
+              <span class="ds-label">Total Losses</span>
+            </div>
+            <div class="dash-stat">
+              <span class="ds-val">17,000</span>
+              <span class="ds-label">Jobs Lost</span>
+            </div>
+          </div>
+          <div class="gas-gallery" id="spiritGallery">
+            <div class="gg-tabs">
+              <button class="gg-tab gg-active" onclick="spiritTab(0,this)">Overview</button>
+              <button class="gg-tab" onclick="spiritTab(1,this)">Financial</button>
+              <button class="gg-tab" onclick="spiritTab(2,this)">Routes</button>
+              <button class="gg-tab" onclick="spiritTab(3,this)">Passengers</button>
+              <button class="gg-tab" onclick="spiritTab(4,this)">Failure</button>
+              <button class="gg-tab" onclick="spiritTab(5,this)">Impact</button>
+            </div>
+            <div class="gg-wrap">
+              <img class="gg-img4 gg-show4" src="Overview.png" alt="Overview"/>
+              <img class="gg-img4" src="fd.png" alt="Financial Decline"/>
+              <img class="gg-img4" src="RP.png" alt="Route Performance"/>
+              <img class="gg-img4" src="PT.png" alt="Passenger Trends"/>
+              <img class="gg-img4" src="FF.png" alt="Failure Factors"/>
+              <img class="gg-img4" src="II.png" alt="Industry Impact"/>
+            </div>
+          </div>
+          <a class="view-dash-link" href="#" onclick="return false">View Full Dashboard</a>
+        </div>
+      </div>
+    </div>iv>
 
 </section>
 
@@ -549,6 +581,8 @@ function gasTab(i,el){document.querySelectorAll('.gg-img').forEach((x,j)=>x.clas
 function bikeTab(i,el){document.querySelectorAll('.gg-img2').forEach((x,j)=>x.classList.toggle('gg-show2',i===j));document.getElementById('bikeGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 
 function ytTab(i,el){document.getElementById('ytGallery').querySelectorAll('.gg-img3').forEach((x,j)=>x.classList.toggle('gg-show3',i===j));document.getElementById('ytGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+
+function spiritTab(i,el){document.getElementById('spiritGallery').querySelectorAll('.gg-img4').forEach((x,j)=>x.classList.toggle('gg-show4',i===j));document.getElementById('spiritGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 </script>
 </body>
 </html>
