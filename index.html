@@ -155,7 +155,10 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
 .gg-tab:hover,.gg-active{background:rgba(201,168,76,.22);border-color:rgba(201,168,76,.45);color:#c9a84c}
 .gg-wrap{border-radius:6px;overflow:hidden;border:1px solid rgba(201,168,76,.12)}
 .gg-img{width:100%;display:none;border-radius:6px}
-.gg-show{display:block}</style>
+.gg-show{display:block}
+.gg-img2{width:100%;display:none;border-radius:6px}
+.gg-show2{display:block}
+</style>
 </head>
 <body>
 
@@ -301,10 +304,20 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
           <div class="dash-stat"><span class="ds-val">+78%</span><span class="ds-label">vs Daily Avg</span></div>
           <div class="dash-stat"><span class="ds-val">Low</span><span class="ds-label">Weather Impact</span></div>
         </div>
-        <div class="chart-wrap-tall"><canvas id="chart-bike"></canvas></div>
-        <div class="dash-upload-slot">
-          <a class="view-dash-link" href="#" onclick="return false">View Full Dashboard &nbsp;→</a>
-        </div>
+        <div class="gas-gallery" id="bikeGallery">
+  <div class="gg-tabs">
+    <button class="gg-tab gg-active" onclick="bikeTab(0,this)">Descriptive</button>
+    <button class="gg-tab" onclick="bikeTab(1,this)">PAC</button>
+    <button class="gg-tab" onclick="bikeTab(2,this)">Prescriptive</button>
+    <button class="gg-tab" onclick="bikeTab(3,this)">Solution</button>
+  </div>
+  <div class="gg-wrap">
+    <img class="gg-img2 gg-show2" src="descriptive%20analysis.png" alt="Descriptive Analysis"/>
+    <img class="gg-img2" src="PAC.png" alt="PAC"/>
+    <img class="gg-img2" src="Prescriptive.png" alt="Prescriptive"/>
+    <img class="gg-img2" src="solution.png" alt="Solution"/>
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -525,6 +538,8 @@ new Chart(document.getElementById('chart-yt2'),{type:'bar',data:{labels:['Music'
 new Chart(document.getElementById('chart-capsim'),{type:'radar',data:{labels:['Customer Satisfaction','Market Share','Net Profit','Production Efficiency','Strategy Alignment','Innovation'],datasets:[{label:'My Score',data:[82,75,85,91,88,78],borderColor:gold,backgroundColor:'rgba(201,168,76,.13)',borderWidth:2,pointBackgroundColor:gold,pointRadius:4},{label:'Industry Avg',data:[65,60,68,72,65,62],borderColor:'rgba(255,255,255,.18)',backgroundColor:'rgba(255,255,255,.03)',borderWidth:1,borderDash:[4,3],pointBackgroundColor:'rgba(255,255,255,.25)',pointRadius:3}]},options:{plugins:{legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}},tooltip:{backgroundColor:'rgba(8,23,46,.92)',titleColor:gold,bodyColor:textColor,borderColor:'rgba(201,168,76,.2)',borderWidth:1}},scales:{r:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:textColor,backdropColor:'transparent',font:{size:8}},pointLabels:{color:textColor,font:{size:9,family:'Inter'}},angleLines:{color:'rgba(255,255,255,.05)'},min:0,max:100}}}});
 
 function gasTab(i,el){document.querySelectorAll('.gg-img').forEach((x,j)=>x.classList.toggle('gg-show',i===j));document.querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+
+function bikeTab(i,el){document.querySelectorAll('.gg-img2').forEach((x,j)=>x.classList.toggle('gg-show2',i===j));document.getElementById('bikeGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 </script>
 </body>
 </html>
