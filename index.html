@@ -158,7 +158,9 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
 .gg-show{display:block}
 .gg-img2{width:100%;display:none;border-radius:6px}
 .gg-show2{display:block}
-</style>
+
+.gg-img3{width:100%;display:none;border-radius:6px}
+.gg-show3{display:block}</style>
 </head>
 <body>
 
@@ -381,11 +383,16 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
           <div class="dash-stat"><span class="ds-val">Day 60</span><span class="ds-label">Critical Window</span></div>
           <div class="dash-stat"><span class="ds-val">8.4%</span><span class="ds-label">Top Eng. Rate</span></div>
         </div>
-        <div class="chart-wrap"><canvas id="chart-yt"></canvas></div>
-        <div class="chart-wrap" style="height:110px;margin-top:.8rem"><canvas id="chart-yt2"></canvas></div>
-        <div class="dash-upload-slot">
-          <a class="view-dash-link" href="#" onclick="return false">View Full Dashboard &nbsp;→</a>
-        </div>
+        <div class="gas-gallery" id="ytGallery">
+              <div class="gg-tabs">
+                <button class="gg-tab gg-active" onclick="ytTab(0,this)">Content Performance</button>
+                <button class="gg-tab" onclick="ytTab(1,this)">Creator Engagement</button>
+              </div>
+              <div class="gg-wrap">
+                <img class="gg-img3 gg-show3" src="Youtube_Analysis_1.png" alt="Content Performance"/>
+                <img class="gg-img3" src="Youtube_Analysis_2.png" alt="Creator Engagement"/>
+              </div>
+            </div>
       </div>
     </div>
   </div>
@@ -540,6 +547,8 @@ new Chart(document.getElementById('chart-capsim'),{type:'radar',data:{labels:['C
 function gasTab(i,el){document.querySelectorAll('.gg-img').forEach((x,j)=>x.classList.toggle('gg-show',i===j));document.querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 
 function bikeTab(i,el){document.querySelectorAll('.gg-img2').forEach((x,j)=>x.classList.toggle('gg-show2',i===j));document.getElementById('bikeGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+
+function ytTab(i,el){document.getElementById('ytGallery').querySelectorAll('.gg-img3').forEach((x,j)=>x.classList.toggle('gg-show3',i===j));document.getElementById('ytGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 </script>
 </body>
 </html>
