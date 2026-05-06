@@ -12,7 +12,9 @@
 <meta name="twitter:title" content="Sushmitha Gutha — Data Analyst"/>
 <meta name="description" content="Data Analyst with an MBA in Business Analytics from DePaul University. Projects in financial analysis, public health, urban strategy, and content analytics."/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+function gasTab(i,el){document.querySelectorAll('.gg-img').forEach((x,j)=>x.classList.toggle('gg-show',i===j));document.querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -146,7 +148,14 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   .exp-row{grid-template-columns:1fr;gap:.4rem}
   .skills-wrap{grid-template-columns:1fr}
 }
-</style>
+
+.gas-gallery{margin-top:.5rem}
+.gg-tabs{display:flex;gap:.35rem;margin-bottom:.5rem;flex-wrap:wrap}
+.gg-tab{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:rgba(205,214,232,.6);padding:.22rem .55rem;border-radius:4px;font-size:.7rem;cursor:pointer;font-family:Inter,sans-serif;transition:.15s}
+.gg-tab:hover,.gg-active{background:rgba(201,168,76,.22);border-color:rgba(201,168,76,.45);color:#c9a84c}
+.gg-wrap{border-radius:6px;overflow:hidden;border:1px solid rgba(201,168,76,.12)}
+.gg-img{width:100%;display:none;border-radius:6px}
+.gg-show{display:block}</style>
 </head>
 <body>
 
@@ -216,11 +225,20 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
           <div class="dash-stat"><span class="ds-val">+53%</span><span class="ds-label">YoY Diesel</span></div>
           <div class="dash-stat"><span class="ds-val">$2.45</span><span class="ds-label">Regional Spread</span></div>
         </div>
-        <div class="chart-wrap"><canvas id="chart-gas"></canvas></div>
-        <div class="chart-wrap" style="height:120px;margin-top:.8rem"><canvas id="chart-gas2"></canvas></div>
-        <div class="dash-upload-slot">
-          <a class="view-dash-link" href="#" onclick="return false">View Full Dashboard &nbsp;→</a>
-        </div>
+        <div class="gas-gallery">
+  <div class="gg-tabs">
+    <button class="gg-tab gg-active" onclick="gasTab(0,this)">Overview</button>
+    <button class="gg-tab" onclick="gasTab(1,this)">Regions</button>
+    <button class="gg-tab" onclick="gasTab(2,this)">Fuel Types</button>
+    <button class="gg-tab" onclick="gasTab(3,this)">Trends</button>
+  </div>
+  <div class="gg-wrap">
+    <img class="gg-img gg-show" src="US%20GAS%20OVERVIEW.png" alt="Overview"/>
+    <img class="gg-img" src="US%20GAS%20REGIONS.png" alt="Regions"/>
+    <img class="gg-img" src="US%20GAS%20Fuel%20type.png" alt="Fuel Types"/>
+    <img class="gg-img" src="us%20gas%20trends.png" alt="Trends"/>
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -506,6 +524,8 @@ new Chart(document.getElementById('chart-yt'),{type:'line',data:{labels:['Day 1'
 new Chart(document.getElementById('chart-yt2'),{type:'bar',data:{labels:['Music','Film/Anim','Education','Gaming','Other'],datasets:[{data:[8.4,7.1,4.9,3.8,2.9],backgroundColor:[gold,'rgba(201,168,76,.78)','rgba(201,168,76,.55)','rgba(201,168,76,.38)','rgba(201,168,76,.22)'],borderRadius:3,borderSkipped:false}]},options:{...base,plugins:{...base.plugins,tooltip:{...base.plugins.tooltip,callbacks:{label:c=>`${c.parsed.y}% eng. rate`}}},scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,callback:v=>v+'%'}}}}});
 
 new Chart(document.getElementById('chart-capsim'),{type:'radar',data:{labels:['Customer Satisfaction','Market Share','Net Profit','Production Efficiency','Strategy Alignment','Innovation'],datasets:[{label:'My Score',data:[82,75,85,91,88,78],borderColor:gold,backgroundColor:'rgba(201,168,76,.13)',borderWidth:2,pointBackgroundColor:gold,pointRadius:4},{label:'Industry Avg',data:[65,60,68,72,65,62],borderColor:'rgba(255,255,255,.18)',backgroundColor:'rgba(255,255,255,.03)',borderWidth:1,borderDash:[4,3],pointBackgroundColor:'rgba(255,255,255,.25)',pointRadius:3}]},options:{plugins:{legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}},tooltip:{backgroundColor:'rgba(8,23,46,.92)',titleColor:gold,bodyColor:textColor,borderColor:'rgba(201,168,76,.2)',borderWidth:1}},scales:{r:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:textColor,backdropColor:'transparent',font:{size:8}},pointLabels:{color:textColor,font:{size:9,family:'Inter'}},angleLines:{color:'rgba(255,255,255,.05)'},min:0,max:100}}}});
+
+function gasTab(i,el){document.querySelectorAll('.gg-img').forEach((x,j)=>x.classList.toggle('gg-show',i===j));document.querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 </script>
 </body>
 </html>
