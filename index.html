@@ -76,6 +76,32 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .proj-insight p strong{color:var(--gold)}
 .proj-tools{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.4rem}
 .proj-tool{background:rgba(255,255,255,.05);color:var(--muted);padding:.25rem .75rem;border-radius:4px;font-size:.72rem;font-weight:500;border:1px solid rgba(255,255,255,.07)}
+.project-block{scroll-margin-top:100px}
+
+/* PROJECT FILTER + GRID */
+.proj-filter-bar{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:3rem}
+.proj-filter-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:.55rem 1.2rem;border-radius:50px;font-size:.8rem;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s}
+.proj-filter-btn:hover{border-color:rgba(201,168,76,.35);color:var(--gold)}
+.proj-filter-btn.active{background:var(--gold);border-color:var(--gold);color:var(--navy);font-weight:700}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.6rem;margin-bottom:1rem}
+.proj-card{background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .2s,border-color .2s;display:flex;flex-direction:column}
+.proj-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.3)}
+.proj-card-thumb{position:relative;height:160px;overflow:hidden}
+.proj-card-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.proj-card:hover .proj-card-thumb img{transform:scale(1.05)}
+.proj-card-cat{position:absolute;top:.7rem;left:.7rem;background:rgba(8,23,46,.85);backdrop-filter:blur(4px);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.3rem .65rem;border-radius:50px}
+.proj-card-body{padding:1.2rem 1.3rem 1.4rem;display:flex;flex-direction:column;flex:1}
+.proj-card-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--white);line-height:1.3;margin-bottom:.6rem}
+.proj-card-desc{color:var(--muted);font-size:.83rem;line-height:1.7;margin-bottom:1rem;flex:1}
+.proj-card-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.1rem}
+.proj-card-tag{background:rgba(255,255,255,.05);color:var(--muted);padding:.22rem .65rem;border-radius:4px;font-size:.68rem;font-weight:500;border:1px solid rgba(255,255,255,.07)}
+.proj-card-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+.proj-card-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border-radius:5px;text-decoration:none;font-size:.76rem;font-weight:600;letter-spacing:.02em;border:1px solid var(--border);color:var(--muted);transition:all .2s}
+.proj-card-btn:hover{border-color:rgba(201,168,76,.35);color:var(--gold)}
+.proj-card-btn-primary{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.25);color:var(--gold)}
+.proj-card-btn-primary:hover{background:rgba(201,168,76,.18);border-color:rgba(201,168,76,.4)}
+.proj-detail-divider{display:flex;align-items:center;gap:1.2rem;margin:1rem 0 4rem;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.15em;font-weight:600}
+.proj-detail-divider::before,.proj-detail-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* DASHBOARD PANEL */
 .dashboard-panel{background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
@@ -121,16 +147,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .exp-right strong{color:var(--text);font-weight:500}
 
 /* SKILLS */
-.skills-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
-.skill-group h4{font-size:.68rem;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);font-weight:700;margin-bottom:.9rem}
-.skill-item{margin-bottom:.75rem}
-.skill-name{display:flex;justify-content:space-between;font-size:.82rem;color:var(--text);margin-bottom:.3rem}
-.skill-name span:last-child{color:var(--gold);font-size:.78rem}
-.skill-bar{height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
-.skill-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px}
 .skill-tags{display:flex;flex-wrap:wrap;gap:.5rem}
 .skill-tag{background:rgba(255,255,255,.05);color:var(--muted);padding:.4rem .9rem;border-radius:50px;font-size:.8rem;font-weight:500;border:1px solid rgba(255,255,255,.07);transition:border-color .2s,color .2s}
 .skill-tag:hover{border-color:rgba(201,168,76,.3);color:var(--gold)}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.6rem}
+.skill-card{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:1.8rem 1.6rem;transition:transform .2s,border-color .2s}
+.skill-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.3)}
+.skill-card-icon{width:44px;height:44px;border-radius:10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);color:var(--gold);display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem}
+.skill-card-icon svg{width:22px;height:22px}
+.skill-card-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);margin-bottom:.6rem}
+.skill-card-desc{color:var(--muted);font-size:.83rem;line-height:1.7;margin-bottom:1.2rem}
+.skill-card-tags{display:flex;flex-wrap:wrap;gap:.45rem}
+.skill-card-tags .skill-tag{font-size:.72rem;padding:.32rem .75rem}
 
 /* CONTACT */
 #contact{padding:6rem 4rem;text-align:center;background:var(--navy2)}
@@ -167,11 +195,14 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   .project-block{grid-template-columns:1fr;gap:2.5rem}.project-block.flip{direction:ltr}
   .hero-strip{grid-template-columns:repeat(2,1fr);gap:1.5rem}.strip-item{border:none;padding:0}
   .exp-row{grid-template-columns:1fr;gap:.4rem}
-  .skills-wrap{grid-template-columns:1fr}
   .about-cards{grid-template-columns:1fr}
   .contact-grid{grid-template-columns:1fr;gap:2.8rem;text-align:center}
   .contact-info .contact-links{justify-content:center}
   .form-row{grid-template-columns:1fr}
+  .proj-grid{grid-template-columns:1fr}
+  .skills-grid{grid-template-columns:1fr}
+  .proj-filter-bar{gap:.5rem}
+  .proj-filter-btn{padding:.5rem 1rem;font-size:.76rem}
 }
 
 .gas-gallery{margin-top:.5rem}
@@ -207,6 +238,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   <a class="nav-logo" href="#">Sushmitha Gutha</a>
   <ul class="nav-links">
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -242,8 +274,119 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   <h2 class="s-heading">Eight problems.<br/>Eight answers.</h2>
   <div class="divider"></div>
 
+  <div class="proj-filter-bar" role="tablist" aria-label="Filter projects by category">
+    <button class="proj-filter-btn active" onclick="projFilter('all',this)">All Projects</button>
+    <button class="proj-filter-btn" onclick="projFilter('logistics',this)">Logistics &amp; Operations</button>
+    <button class="proj-filter-btn" onclick="projFilter('finance',this)">Finance &amp; Aviation</button>
+    <button class="proj-filter-btn" onclick="projFilter('health',this)">Public Health</button>
+    <button class="proj-filter-btn" onclick="projFilter('urban',this)">Urban Strategy</button>
+    <button class="proj-filter-btn" onclick="projFilter('content',this)">Content Analytics</button>
+  </div>
+
+  <div class="proj-grid">
+    <div class="proj-card" data-cat="logistics">
+      <div class="proj-card-thumb"><img src="DHL-dashboard.png" alt="DHL Group Q2 2026 Dashboard" loading="lazy"/><span class="proj-card-cat">Logistics &amp; Supply Chain</span></div>
+      <div class="proj-card-body">
+        <h4 class="proj-card-title">DHL Group Q2 2026 Performance Analysis</h4>
+        <p class="proj-card-desc">Six quarters of DHL Group Statbook data structured in SQLite and visualized in an interactive Tableau dashboard, surfacing a 12.9% YoY revenue story.</p>
+        <div class="proj-card-tags"><span class="proj-card-tag">SQL</span><span class="proj-card-tag">Tableau</span></div>
+        <div class="proj-card-actions">
+          <a class="proj-card-btn proj-card-btn-primary" href="https://public.tableau.com/views/DHL_YOY/Dashboard2?:language=en-US&amp;:sid=&amp;:redirect=auth&amp;:display_count=n&amp;:origin=viz_share_link" target="_blank" rel="noopener">Dashboard</a>
+          <a class="proj-card-btn" href="#detail-dhl">Case Study</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-card" data-cat="logistics">
+      <div class="proj-card-thumb"><img src="WO.png" alt="Warehouse Operations Overview" loading="lazy"/><span class="proj-card-cat">Operations</span></div>
+      <div class="proj-card-body">
+        <h4 class="proj-card-title">Warehouse Shipment Delay Analysis</h4>
+        <p class="proj-card-desc">180,519 orders across five markets and 38 months traced a 54.8% late-delivery rate back to an Order Management System, not warehouse execution.</p>
+        <div class="proj-card-tags"><span class="proj-card-tag">Root Cause Analysis</span><span class="proj-card-tag">Executive Reporting</span></div>
+        <div class="proj-card-actions">
+          <a class="proj-card-btn proj-card-btn-primary" href="warehouse-dashboard.html" target="_blank" rel="noopener">Dashboard</a>
+          <a class="proj-card-btn" href="#detail-warehouse">Case Study</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-card" data-cat="finance">
+      <div class="proj-card-thumb"><img src="US%20GAS%20OVERVIEW.png" alt="US Fuel Price Dashboard Overview" loading="lazy"/><span class="proj-card-cat">Finance</span></div>
+      <div class="proj-card-body">
+        <h4 class="proj-card-title">Nobody had a real-time national fuel picture. So I built one.</h4>
+        <p class="proj-card-desc">A live AI-powered fuel pricing dashboard across all 51 states, pulling directly from AAA, surfaced a 53% YoY diesel spike hiding a logistics cost crisis.</p>
+        <div class="proj-card-tags"><span class="proj-card-tag">Claude AI</span><span class="proj-card-tag">Excel Modeling</span></div>
+        <div class="proj-card-actions">
+          <a class="proj-card-btn" href="#detail-gas">Case Study</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-card" data-cat="health">
+      <div class="proj-card-thumb"><img src="Covid.png" alt="Chicago COVID-19 Trends Dashboard" loading="lazy"/><span class="proj-card-cat">Public Health</span></div>
+      <div class="proj-card-body">
+        <h4 class="proj-card-title">Can you see a COVID surge coming before it arrives?</h4>
+        <p class="proj-card-desc">SQL infrastructure across 70+ Chicago ZIP codes found positivity-rate spikes preceded case surges by 7 to 14 days, a real early-warning window.</p>
+        <div class="proj-card-tags"><span class="proj-card-tag">Snowflake SQL</span><span class="proj-card-tag">Predictive Signals</span></div>
+        <div class="proj-card-actions">
+          <a class="proj-card-btn" href="#detail-covid">Case Study</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-card" data-cat="logistics">
+      <div class="proj-card-thumb"><img src="descriptive%20analysis.png" alt="CitiBike Demand Descriptive Analysis" loading="lazy"/><span class="proj-card-cat">Operations</span></div>
+      <div class="proj-card-body">
+        <h4 class="proj-card-title">The bikes were there. They just weren't where people needed them.</h4>
+        <p class="proj-card-desc">Station-level demand analysis showed 6 PM commuter peaks, not weather, drove the shortages, pointing to timed rebalancing instead of broad network averages.</p>
+        <div class="proj-card-tags"><span class="proj-card-tag">Demand Modeling</span><span class="proj-card-tag">Station Analysis</span></div>
+        <div class="proj-card-actions">
+          <a class="proj-card-btn" href="#detail-citibike">Case Study</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-card" data-cat="urban">
+      <div class="proj-card-thumb"><img src="Roseland.jpg" alt="Roseland Neighborhood Map, Chicago" loading="lazy"/><span class="proj-card-cat">Urban Strategy</span></div>
+      <div class="proj-card-body">
+        <h4 class="proj-card-title">The Red Line is coming. Roseland isn't ready.</h4>
+        <p class="proj-card-desc">Demographic, income, and food-access data shaped a data-backed co-op grocery recommendation for a Chicago neighborhood the CTA extension is about to reach.</p>
+        <div class="proj-card-tags"><span class="proj-card-tag">Demographic Analysis</span><span class="proj-card-tag">Market Sizing</span></div>
+        <div class="proj-card-actions">
+          <a class="proj-card-btn" href="#detail-roseland">Case Study</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-card" data-cat="content">
+      <div class="proj-card-thumb"><img src="Youtube_Analysis_1.png" alt="YouTube Content Performance Analysis" loading="lazy"/><span class="proj-card-cat">Content Analytics</span></div>
+      <div class="proj-card-body">
+        <h4 class="proj-card-title">Views don't mean success. 537 videos prove it.</h4>
+        <p class="proj-card-desc">Thirteen years of YouTube data across 537 videos found the first 60 days, not subscriber count or total views, is the strongest predictor of long-term performance.</p>
+        <div class="proj-card-tags"><span class="proj-card-tag">Tableau</span><span class="proj-card-tag">Engagement Modeling</span></div>
+        <div class="proj-card-actions">
+          <a class="proj-card-btn" href="#detail-youtube">Case Study</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-card" data-cat="finance">
+      <div class="proj-card-thumb"><img src="Overview.png" alt="Spirit Airlines Analytics Overview" loading="lazy"/><span class="proj-card-cat">Aviation</span></div>
+      <div class="proj-card-body">
+        <h4 class="proj-card-title">Spirit Airlines: Ceased Operations Analysis</h4>
+        <p class="proj-card-desc">A 34-year financial autopsy tracing $2.5B+ in cumulative losses, the blocked JetBlue merger, and the cascade of failures that ended in full shutdown.</p>
+        <div class="proj-card-tags"><span class="proj-card-tag">Excel</span><span class="proj-card-tag">Power BI</span></div>
+        <div class="proj-card-actions">
+          <a class="proj-card-btn" href="#detail-spirit">Case Study</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-detail-divider"><span>Full Case Studies</span></div>
+
   <!-- P1: DHL -->
-  <div class="project-block">
+  <div class="project-block" id="detail-dhl">
     <div class="proj-narrative">
       <span class="proj-tag">Logistics &amp; Supply Chain · SQL + Tableau</span>
       <span class="proj-num">01</span>
@@ -271,7 +414,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 
   <!-- P2: WAREHOUSE -->
-  <div class="project-block flip">
+  <div class="project-block flip" id="detail-warehouse">
     <div class="proj-narrative">
       <span class="proj-tag">Operations · Supply Chain</span>
       <span class="proj-num">02</span>
@@ -317,7 +460,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 
   <!-- P3: GAS PRICE -->
-  <div class="project-block">
+  <div class="project-block" id="detail-gas">
     <div class="proj-narrative">
       <span class="proj-tag">Finance · AI-Powered Analysis</span>
       <span class="proj-num">03</span>
@@ -361,7 +504,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 
   <!-- P2: COVID -->
-  <div class="project-block flip">
+  <div class="project-block flip" id="detail-covid">
     <div class="proj-narrative">
       <span class="proj-tag">Public Health · Predictive Analytics</span>
       <span class="proj-num">04</span>
@@ -393,7 +536,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 
   <!-- ── P3: CITIBIKE ── -->
-  <div class="project-block">
+  <div class="project-block" id="detail-citibike">
     <div class="proj-narrative">
       <span class="proj-tag">Operations · Demand Optimization</span>
       <span class="proj-num">05</span>
@@ -437,7 +580,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 
   <!-- ── P4: CTA ── -->
-  <div class="project-block flip">
+  <div class="project-block flip" id="detail-roseland">
     <div class="proj-narrative">
       <span class="proj-tag">Urban Strategy · Market Research</span>
       <span class="proj-num">06</span>
@@ -469,7 +612,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 
   <!-- ── P5: YOUTUBE ── -->
-  <div class="project-block">
+  <div class="project-block" id="detail-youtube">
     <div class="proj-narrative">
       <span class="proj-tag">Content Analytics · Tableau</span>
       <span class="proj-num">07</span>
@@ -509,7 +652,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 
     <!-- ── P6: SPIRIT AIRLINES ── -->
-  <div class="project-block flip">
+  <div class="project-block flip" id="detail-spirit">
       <div class="proj-narrative">
         <span class="proj-tag">Aviation · Financial Analysis</span>
         <span class="proj-num">08</span>
@@ -567,11 +710,89 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
               <img class="gg-img4" src="II.png" alt="Industry Impact"/>
             </div>
           </div>
-          <a class="view-dash-link" href="#" onclick="return false">View Full Dashboard</a>
         </div>
       </div>
     </div>
 
+</section>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <div class="s-eyebrow">Skills</div>
+  <h2 class="s-heading">What I bring<br/>to the table.</h2>
+  <div class="divider"></div>
+
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M20 19V8"/></svg>
+      </div>
+      <h4 class="skill-card-title">Data &amp; Analytics</h4>
+      <p class="skill-card-desc">Structuring, querying, and validating large datasets to find the signal underneath.</p>
+      <div class="skill-card-tags">
+        <span class="skill-tag">SQL &amp; Snowflake</span>
+        <span class="skill-tag">Root Cause Analysis</span>
+        <span class="skill-tag">Geospatial Analysis</span>
+        <span class="skill-tag">Predictive Signals</span>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 3.4"/></svg>
+      </div>
+      <h4 class="skill-card-title">BI &amp; Visualization</h4>
+      <p class="skill-card-desc">Turning validated data into dashboards and reports that stakeholders actually use.</p>
+      <div class="skill-card-tags">
+        <span class="skill-tag">Tableau</span>
+        <span class="skill-tag">Power BI</span>
+        <span class="skill-tag">Executive Reporting</span>
+        <span class="skill-tag">ETL &amp; Pipelines</span>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5.5 4 3.5 8-9"/><path d="M14 6h6v6"/></svg>
+      </div>
+      <h4 class="skill-card-title">Financial &amp; Business Analytics</h4>
+      <p class="skill-card-desc">Modeling scenarios and sizing opportunities to inform decisions with real financial weight.</p>
+      <div class="skill-card-tags">
+        <span class="skill-tag">Financial Modeling</span>
+        <span class="skill-tag">Excel (Advanced)</span>
+        <span class="skill-tag">Strategic Analysis</span>
+        <span class="skill-tag">Market Sizing</span>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="13" height="9" rx="1.2"/><path d="M16 11h3l2 2.5V17h-5"/><circle cx="7.5" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/></svg>
+      </div>
+      <h4 class="skill-card-title">Operations &amp; Supply Chain</h4>
+      <p class="skill-card-desc">Analyzing demand, capacity, and delivery patterns to find where execution actually breaks down.</p>
+      <div class="skill-card-tags">
+        <span class="skill-tag">Demand Modeling</span>
+        <span class="skill-tag">Station Analysis</span>
+        <span class="skill-tag">Operations Strategy</span>
+        <span class="skill-tag">Capacity Planning</span>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z"/></svg>
+      </div>
+      <h4 class="skill-card-title">AI &amp; Analytical Workflows</h4>
+      <p class="skill-card-desc">Using AI as a live data layer to pull, structure, and interpret information in real time.</p>
+      <div class="skill-card-tags">
+        <span class="skill-tag">Claude AI</span>
+        <span class="skill-tag">R &amp; Forecasting</span>
+        <span class="skill-tag">Category Analysis</span>
+        <span class="skill-tag">Engagement Modeling</span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- EXPERIENCE -->
@@ -611,47 +832,21 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 </section>
 
-<!-- ABOUT + SKILLS -->
+<!-- ABOUT -->
 <section class="section" id="about">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start">
-    <div>
-      <div class="s-eyebrow">About</div>
-      <h2 class="s-heading">The work speaks.<br/>Here's the context.</h2>
-      <div class="divider"></div>
-      <p style="color:var(--muted);font-size:.95rem;line-height:1.95;margin-bottom:1.2rem">
-        I started by optimizing feed costs for a 20-acre facility in India. I moved to Chicago, earned my MBA in Business Analytics at DePaul, and have since worked across investment management, global operations, and nonprofit finance.
-      </p>
-      <p style="color:var(--muted);font-size:.95rem;line-height:1.95;margin-bottom:1.2rem">
-        The common thread across every role and every project: <strong style="color:var(--text);font-weight:500">good analysis changes a decision.</strong> Not just reports a number. Actually changes what gets done next.
-      </p>
-      <p style="color:var(--muted);font-size:.95rem;line-height:1.95">
-        I work at the intersection of data, finance, and strategy, using SQL, Tableau, Power BI, and Excel to build the pipelines, and the business acumen to know what they're actually for.
-      </p>
-    </div>
-    <div>
-      <div class="s-eyebrow" style="margin-top:.2rem">Skills</div>
-      <div class="divider" style="margin-top:.6rem"></div>
-      <div class="skills-wrap">
-        <div class="skill-group">
-          <h4>Analytics & Finance</h4>
-          <div class="skill-tags">
-            <span class="skill-tag">Financial Modeling</span>
-            <span class="skill-tag">SQL & Snowflake</span>
-            <span class="skill-tag">Power BI</span>
-            <span class="skill-tag">Tableau</span>
-          </div>
-        </div>
-        <div class="skill-group">
-          <h4>Tools & Strategy</h4>
-          <div class="skill-tags">
-            <span class="skill-tag">Excel (Advanced)</span>
-            <span class="skill-tag">ETL & Pipelines</span>
-            <span class="skill-tag">Strategic Analysis</span>
-            <span class="skill-tag">R & Forecasting</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div style="max-width:700px">
+    <div class="s-eyebrow">About</div>
+    <h2 class="s-heading">The work speaks.<br/>Here's the context.</h2>
+    <div class="divider"></div>
+    <p style="color:var(--muted);font-size:.95rem;line-height:1.95;margin-bottom:1.2rem">
+      I started by optimizing feed costs for a 20-acre facility in India. I moved to Chicago, earned my MBA in Business Analytics at DePaul, and have since worked across investment management, global operations, and nonprofit finance.
+    </p>
+    <p style="color:var(--muted);font-size:.95rem;line-height:1.95;margin-bottom:1.2rem">
+      The common thread across every role and every project: <strong style="color:var(--text);font-weight:500">good analysis changes a decision.</strong> Not just reports a number. Actually changes what gets done next.
+    </p>
+    <p style="color:var(--muted);font-size:.95rem;line-height:1.95">
+      I work at the intersection of data, finance, and strategy, using SQL, Tableau, Power BI, and Excel to build the pipelines, and the business acumen to know what they're actually for.
+    </p>
   </div>
   <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid var(--border)">
     <div class="s-eyebrow">A Little About Me</div>
@@ -816,6 +1011,13 @@ function ytTab(i,el){document.getElementById('ytGallery').querySelectorAll('.gg-
 
 function spiritTab(i,el){document.getElementById('spiritGallery').querySelectorAll('.gg-img4').forEach((x,j)=>x.classList.toggle('gg-show4',i===j));document.getElementById('spiritGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 function whTab(i,el){document.getElementById('whGallery').querySelectorAll('.gg-img5').forEach((x,j)=>x.classList.toggle('gg-show5',i===j));document.getElementById('whGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+function projFilter(cat,el){
+  document.querySelectorAll('.proj-filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.proj-card').forEach(c=>{
+    c.style.display=(cat==='all'||c.getAttribute('data-cat')===cat)?'':'none';
+  });
+}
 </script>
 </body>
 </html>
