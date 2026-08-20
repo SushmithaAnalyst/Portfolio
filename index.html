@@ -163,6 +163,8 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
 .gg-show3{display:block}
 .gg-img4{width:100%;display:none;border-radius:6px}
 .gg-show4{display:block}
+.gg-pane{display:none}
+.gg-show-pane{display:block}
 </style>
 </head>
 <body>
@@ -241,7 +243,13 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
       <span class="proj-tag">Operations · Supply Chain</span>
       <span class="proj-num">02</span>
       <h3 class="proj-title">Warehouse Shipment Delay Analysis</h3>
-      <p class="proj-story">Details for this project are still being finalized.</p>
+      <p class="proj-story">54.8% of orders arrived late, and the easy explanation was warehouse execution. I pulled 180,519 orders across five markets and 38 months of order data, built an interactive dashboard to check the pattern by shipping mode, region, and time, and the data pointed somewhere else entirely.</p>
+      <div class="proj-insight">
+        <p><strong>The finding:</strong> Late rates stayed within 0.8 points of each other across all five markets (54.4% to 55.2%) and held flat for 38 straight months with no seasonal pattern. First Class alone ran 95.3% late, the mode promises 1-day delivery against a 2.0-day actual average. That kind of consistency does not come from warehouse execution. It points to an Order Management System committing delivery windows the fulfillment process was never able to hit.</p>
+      </div>
+      <div class="proj-tools">
+        <span class="proj-tool">Root Cause Analysis</span><span class="proj-tool">Chart.js</span><span class="proj-tool">Executive Reporting</span>
+      </div>
     </div>
     <div class="dashboard-panel">
       <div class="dash-header">
@@ -249,9 +257,41 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
         <div class="dash-dots"><div class="dash-dot"></div><div class="dash-dot"></div><div class="dash-dot"></div></div>
       </div>
       <div class="dash-body">
-        <div class="dash-upload-slot">
-          <span style="color:var(--muted);font-size:.8rem;font-style:italic">Dashboard preview coming soon.</span>
+        <div class="dash-stats">
+          <div class="dash-stat"><span class="ds-val">54.8%</span><span class="ds-label">Late Delivery Rate</span></div>
+          <div class="dash-stat"><span class="ds-val">180,519</span><span class="ds-label">Orders Analyzed</span></div>
+          <div class="dash-stat"><span class="ds-val">95.3%</span><span class="ds-label">First Class Late</span></div>
         </div>
+        <div class="gas-gallery" id="whGallery">
+          <div class="gg-tabs">
+            <button class="gg-tab gg-active" onclick="whTab(0,this)">Overview</button>
+            <button class="gg-tab" onclick="whTab(1,this)">Shipment Delay</button>
+            <button class="gg-tab" onclick="whTab(2,this)">Geography</button>
+            <button class="gg-tab" onclick="whTab(3,this)">Monthly Trend</button>
+            <button class="gg-tab" onclick="whTab(4,this)">Key Findings</button>
+          </div>
+          <div class="gg-wrap">
+            <div class="gg-pane gg-show-pane">
+              <img src="WO.png" alt="Warehouse Operations Overview" style="width:100%;border-radius:6px;display:block"/>
+            </div>
+            <div class="gg-pane">
+              <img src="SD1.png" alt="Late Delivery Rate by Shipping Mode" style="width:100%;border-radius:6px;display:block;margin-bottom:.5rem"/>
+              <img src="SD2.png" alt="Delivery Outcome Breakdown by Mode" style="width:100%;border-radius:6px;display:block"/>
+            </div>
+            <div class="gg-pane">
+              <img src="GEO1.png" alt="Market-Level Performance" style="width:100%;border-radius:6px;display:block;margin-bottom:.5rem"/>
+              <img src="GEO2.png" alt="Late Rate Across Top Regions" style="width:100%;border-radius:6px;display:block"/>
+            </div>
+            <div class="gg-pane">
+              <img src="M1.png" alt="Monthly Late Delivery Trend" style="width:100%;border-radius:6px;display:block;margin-bottom:.5rem"/>
+              <img src="M2.png" alt="Category Volume and Late Rate" style="width:100%;border-radius:6px;display:block"/>
+            </div>
+            <div class="gg-pane">
+              <img src="KF.png" alt="Key Findings" style="width:100%;border-radius:6px;display:block"/>
+            </div>
+          </div>
+        </div>
+        <a class="view-dash-link" href="warehouse-dashboard.html" target="_blank" rel="noopener">View Full Dashboard</a>
       </div>
     </div>
   </div>
@@ -638,6 +678,7 @@ function bikeTab(i,el){document.querySelectorAll('.gg-img2').forEach((x,j)=>x.cl
 function ytTab(i,el){document.getElementById('ytGallery').querySelectorAll('.gg-img3').forEach((x,j)=>x.classList.toggle('gg-show3',i===j));document.getElementById('ytGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 
 function spiritTab(i,el){document.getElementById('spiritGallery').querySelectorAll('.gg-img4').forEach((x,j)=>x.classList.toggle('gg-show4',i===j));document.getElementById('spiritGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+function whTab(i,el){document.getElementById('whGallery').querySelectorAll('.gg-pane').forEach((x,j)=>x.classList.toggle('gg-show-pane',i===j));document.getElementById('whGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 </script>
 </body>
 </html>
