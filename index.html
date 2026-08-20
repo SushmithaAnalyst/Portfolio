@@ -163,12 +163,6 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
 .gg-show3{display:block}
 .gg-img4{width:100%;display:none;border-radius:6px}
 .gg-show4{display:block}
-.projects-featured{background:rgba(201,168,76,.04);border:1px solid var(--border);border-radius:12px;padding:2.5rem;margin-bottom:2.5rem}
-.projects-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
-.mini-proj{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:1.5rem}
-.mini-proj h4{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--white);margin-bottom:.6rem;line-height:1.3}
-.mini-proj p{color:var(--muted);font-size:.85rem;line-height:1.7;font-style:italic}
-@media(max-width:900px){.projects-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -178,7 +172,6 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   <a class="nav-logo" href="#">Sushmitha Gutha</a>
   <ul class="nav-links">
     <li><a href="#projects">Projects</a></li>
-    <li><a href="#work">Work</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -197,7 +190,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
     <strong>Six projects. Four companies. One through line: clarity from complexity.</strong>
   </p>
   <div class="hero-actions">
-    <a class="btn-primary" href="#work">View Case Studies</a>
+    <a class="btn-primary" href="#projects">View Projects</a>
     <a class="btn-secondary" href="https://www.linkedin.com/in/sushmithagutha" target="_blank">LinkedIn ↗</a>
   </div>
   <div class="hero-strip">
@@ -208,51 +201,65 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 </section>
 
-<!-- RECENT PROJECTS -->
+<!-- PROJECTS -->
 <section class="section section-alt" id="projects">
-  <div class="s-eyebrow">Recent Projects</div>
-  <h2 class="s-heading">The latest work.</h2>
+  <div class="s-eyebrow">Projects</div>
+  <h2 class="s-heading">Eight problems.<br/>Eight answers.</h2>
   <div class="divider"></div>
 
-  <div class="projects-featured">
-    <span class="proj-tag">Logistics &amp; Supply Chain · SQL + Tableau</span>
-    <h3 class="proj-title">DHL Group Q2 2026 Performance Analysis</h3>
-    <p class="proj-story">Used DHL Group's publicly available Q2 2026 Statbook data to analyze company-wide financial and operational performance. I structured the data in SQLite, used SQL to validate and analyze it, and built a Tableau dashboard on top of it. The analysis covers six quarters of history across all five DHL Group divisions, including revenue growth, EBIT margins, regional performance, organic versus reported growth, and Supply Chain new-business trends.</p>
-    <div class="proj-tools">
-      <span class="proj-tool">SQLite</span><span class="proj-tool">SQL</span><span class="proj-tool">Tableau</span>
-    </div>
-    <p style="color:var(--muted);font-size:.8rem;font-style:italic;margin-top:.6rem">Repo and dashboard link coming soon.</p>
-  </div>
-
-  <div class="projects-grid">
-    <div class="mini-proj">
-      <span class="proj-tag">Operations · Supply Chain</span>
-      <h4>Warehouse Shipment Delay Analysis</h4>
-      <p>Details coming soon.</p>
-    </div>
-    <div class="mini-proj">
-      <span class="proj-tag">Automotive · Python + Chart.js</span>
-      <h4>Tesla Global Deliveries Analysis</h4>
-      <p style="font-style:normal">Interactive dashboard tracking Tesla's quarterly vehicle deliveries from Q1 2019 through Q2 2026, built from Tesla's official investor relations reports and SEC filings, no estimates or third-party figures. Q2 2026 deliveries reached 480,126 vehicles, up 25% year over year and Tesla's best second quarter on record, following two years of declining deliveries.</p>
-      <div class="proj-tools" style="margin-top:.8rem;margin-bottom:0">
-        <span class="proj-tool">Python</span><span class="proj-tool">Chart.js</span>
+  <!-- P1: DHL -->
+  <div class="project-block">
+    <div class="proj-narrative">
+      <span class="proj-tag">Logistics &amp; Supply Chain · SQL + Tableau</span>
+      <span class="proj-num">01</span>
+      <h3 class="proj-title">DHL Group Q2 2026 Performance Analysis</h3>
+      <p class="proj-story">DHL Group publishes a detailed quarterly Statbook, but the numbers span six quarters and five divisions with no single view to compare them. I pulled the publicly available Q2 2026 Statbook data, structured it in SQLite, and used SQL to validate and analyze it before building a Tableau dashboard on top.</p>
+      <div class="proj-insight">
+        <p><strong>What it covers:</strong> revenue growth, EBIT margins, and regional performance across all five DHL Group divisions, plus how organic growth compares to reported growth and how Supply Chain's new-business wins have trended over the past six quarters.</p>
       </div>
-      <a class="view-dash-link" href="https://github.com/sushmithaanalyst/tesla-delivery-analysis" target="_blank" style="margin-top:.9rem">View Repository</a>
+      <div class="proj-tools">
+        <span class="proj-tool">SQLite</span><span class="proj-tool">SQL</span><span class="proj-tool">Tableau</span>
+      </div>
+    </div>
+    <div class="dashboard-panel">
+      <div class="dash-header">
+        <span class="dash-title-text">DHL Group Q2 2026 Dashboard</span>
+        <div class="dash-dots"><div class="dash-dot"></div><div class="dash-dot"></div><div class="dash-dot"></div></div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-upload-slot">
+          <span style="color:var(--muted);font-size:.8rem;font-style:italic">Dashboard preview coming soon.</span>
+        </div>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- WORK -->
-<section class="section" id="work">
-  <div class="s-eyebrow">Case Studies</div>
-  <h2 class="s-heading">Six problems.<br/>Six answers.</h2>
-  <div class="divider"></div>
+  <!-- P2: WAREHOUSE -->
+  <div class="project-block flip">
+    <div class="proj-narrative">
+      <span class="proj-tag">Operations · Supply Chain</span>
+      <span class="proj-num">02</span>
+      <h3 class="proj-title">Warehouse Shipment Delay Analysis</h3>
+      <p class="proj-story">Details for this project are still being finalized.</p>
+    </div>
+    <div class="dashboard-panel">
+      <div class="dash-header">
+        <span class="dash-title-text">Warehouse Shipment Delay Analysis</span>
+        <div class="dash-dots"><div class="dash-dot"></div><div class="dash-dot"></div><div class="dash-dot"></div></div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-upload-slot">
+          <span style="color:var(--muted);font-size:.8rem;font-style:italic">Dashboard preview coming soon.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- P1: GAS PRICE -->
+  <!-- P3: GAS PRICE -->
   <div class="project-block">
     <div class="proj-narrative">
       <span class="proj-tag">Finance · AI-Powered Analysis</span>
-      <span class="proj-num">01</span>
+      <span class="proj-num">03</span>
       <h3 class="proj-title">Nobody had a real-time national fuel picture. So I built one.</h3>
       <p class="proj-story">In 2024, understanding fuel pricing across all 51 states meant hours of manual exports and stale data. I used Claude as a live data layer , pulling directly from AAA in real time, no downloads, no manual cleaning. What I got back wasn't just a dataset. It was a business case hiding in plain sight.</p>
       <div class="proj-insight">
@@ -296,7 +303,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   <div class="project-block flip">
     <div class="proj-narrative">
       <span class="proj-tag">Public Health · Predictive Analytics</span>
-      <span class="proj-num">02</span>
+      <span class="proj-num">04</span>
       <h3 class="proj-title">Can you see a COVID surge coming before it arrives?</h3>
       <p class="proj-story">With 70+ ZIP codes and millions of case records in Snowflake, the question wasn't "what happened?" . it was "what's about to happen?" I built the SQL infrastructure to find out. The signal was already there. It just hadn't been extracted yet.</p>
       <div class="proj-insight">
@@ -328,7 +335,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   <div class="project-block">
     <div class="proj-narrative">
       <span class="proj-tag">Operations · Demand Optimization</span>
-      <span class="proj-num">03</span>
+      <span class="proj-num">05</span>
       <h3 class="proj-title">The bikes were there. They just weren't where people needed them.</h3>
       <p class="proj-story">Availability isn't the problem : redistribution is. By analyzing demand at the station level, a clear picture emerged: weather barely matters, weekends barely shift demand, but 6 PM is where everything breaks down. Commuters flood stations that weren't stocked for them.</p>
       <div class="proj-insight">
@@ -372,7 +379,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   <div class="project-block flip">
     <div class="proj-narrative">
       <span class="proj-tag">Urban Strategy · Market Research</span>
-      <span class="proj-num">04</span>
+      <span class="proj-num">06</span>
       <h3 class="proj-title">The Red Line is coming. Roseland isn't ready.</h3>
       <p class="proj-story">Transit access without economic access doesn't move communities forward. I used demographic, income, and food-access data to map exactly what Roseland was missing , and what the CTA extension created an opportunity to fix. The demand was clearly there. The question was which model could actually serve it.</p>
       <div class="proj-insight">
@@ -404,7 +411,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   <div class="project-block">
     <div class="proj-narrative">
       <span class="proj-tag">Content Analytics · Tableau</span>
-      <span class="proj-num">05</span>
+      <span class="proj-num">07</span>
       <h3 class="proj-title">Views don't mean success. 537 videos prove it.</h3>
       <p class="proj-story">Thirteen years of YouTube data. 537 videos. Every platform metric you can name. The single strongest predictor of long-term performance isn't subscriber count, production budget, or total views , it's what happens in the first 60 days. That's the window most content teams aren't watching closely enough.</p>
       <div class="proj-insight">
@@ -444,7 +451,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   <div class="project-block flip">
       <div class="proj-narrative">
         <span class="proj-tag">Aviation · Financial Analysis</span>
-        <span class="proj-num">06</span>
+        <span class="proj-num">08</span>
         <h3 class="proj-title">Spirit Airlines : Ceased Operations Analysis</h3>
         <p class="proj-story">A comprehensive 34-year autopsy of Spirit Airlines' collapse , from ULCC pioneer to double bankruptcy and full shutdown on May 2, 2026. Traced $2.5B+ in cumulative losses, the DOJ-blocked JetBlue merger, and the cascade of failures that stranded 1.8M passengers.</p>
         <div class="proj-insight">
