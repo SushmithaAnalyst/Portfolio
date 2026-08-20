@@ -733,34 +733,6 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
 <footer>© 2026 Sushmitha Gutha &nbsp;·&nbsp; Data Analyst &nbsp;·&nbsp; Chicago, IL</footer>
 
 <script>
-const gold='#c9a84c',gold2='#e0c270',textColor='rgba(205,214,232,.65)',gridColor='rgba(255,255,255,.04)';
-const base={plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(8,23,46,.92)',titleColor:gold,bodyColor:textColor,borderColor:'rgba(201,168,76,.2)',borderWidth:1}},scales:{x:{grid:{color:gridColor},ticks:{color:textColor,font:{size:9,family:'Inter'}}},y:{grid:{color:gridColor},ticks:{color:textColor,font:{size:9,family:'Inter'}}}}};
-
-new Chart(document.getElementById('chart-gas'),{type:'bar',data:{labels:['South','Midwest','Mountain','Northeast','West','National'],datasets:[{data:[3.15,3.22,3.58,3.89,4.45,3.67],backgroundColor:['rgba(201,168,76,.45)','rgba(201,168,76,.5)','rgba(201,168,76,.6)','rgba(201,168,76,.72)','rgba(201,168,76,.88)',gold],borderRadius:4,borderSkipped:false}]},options:{...base,plugins:{...base.plugins,tooltip:{...base.plugins.tooltip,callbacks:{label:c=>`$${c.parsed.y.toFixed(2)}/gal`}}},scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,callback:v=>`$${v}`}}}}});
-
-new Chart(document.getElementById('chart-gas2'),{type:'bar',data:{labels:['Regular','Midgrade','Premium','Diesel','E85'],datasets:[{label:'Prior Year',data:[2.80,3.05,3.28,2.90,2.45],backgroundColor:'rgba(255,255,255,.09)',borderRadius:3,borderSkipped:false},{label:'Current',data:[3.67,3.95,4.22,4.43,2.98],backgroundColor:gold,borderRadius:3,borderSkipped:false}]},options:{...base,plugins:{...base.plugins,legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}}},scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,callback:v=>`$${v}`}}},barPercentage:.7,categoryPercentage:.7}});
-
-new Chart(document.getElementById('chart-covid'),{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Cases (K)',data:[12,9,6,5,8,11,15,13,10,14,22,28],borderColor:gold,backgroundColor:'rgba(201,168,76,.1)',tension:.4,fill:true,borderWidth:2,pointRadius:3,pointBackgroundColor:gold},{label:'Positivity %',data:[8,6,4,4,6,8,10,9,7,11,16,21],borderColor:'rgba(224,194,112,.55)',backgroundColor:'transparent',tension:.4,borderWidth:1.5,borderDash:[4,3],pointRadius:2,pointBackgroundColor:gold2}]},options:{...base,plugins:{...base.plugins,legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}}}}});
-
-new Chart(document.getElementById('chart-bike'),{type:'bar',data:{labels:['6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am'],datasets:[{data:[42,78,65,88,72,95,156,89,45,18],backgroundColor:ctx=>ctx.parsed.y>140?gold:ctx.parsed.y>80?'rgba(201,168,76,.6)':'rgba(201,168,76,.3)',borderRadius:4,borderSkipped:false}]},options:{...base}});
-
-new Chart(document.getElementById('chart-cta'),{type:'bar',data:{labels:['Grocery Access','Transit','Median Income','Food Security','Employment','Healthcare'],datasets:[{label:'Roseland',data:[22,45,38,30,42,35],backgroundColor:'rgba(201,168,76,.55)',borderRadius:3,borderSkipped:false},{label:'Chicago Avg',data:[68,72,58,65,61,62],backgroundColor:'rgba(255,255,255,.09)',borderRadius:3,borderSkipped:false}]},options:{...base,indexAxis:'y',plugins:{...base.plugins,legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}}},scales:{x:{...base.scales.x,max:100,ticks:{...base.scales.x.ticks,callback:v=>v}},y:{...base.scales.y}}}});
-
-new Chart(document.getElementById('chart-yt'),{type:'line',data:{labels:['Day 1','Day 7','Day 14','Day 30','Day 45','Day 60','Day 90','Day 180','Day 365'],datasets:[{data:[60,72,68,88,95,91,58,38,28],borderColor:gold,backgroundColor:'rgba(201,168,76,.1)',tension:.4,fill:true,borderWidth:2.5,pointRadius:[3,3,3,4,6,4,3,3,3],pointBackgroundColor:ctx=>ctx.dataIndex===4?gold2:gold}]},options:{...base}});
-
-new Chart(document.getElementById('chart-yt2'),{type:'bar',data:{labels:['Music','Film/Anim','Education','Gaming','Other'],datasets:[{data:[8.4,7.1,4.9,3.8,2.9],backgroundColor:[gold,'rgba(201,168,76,.78)','rgba(201,168,76,.55)','rgba(201,168,76,.38)','rgba(201,168,76,.22)'],borderRadius:3,borderSkipped:false}]},options:{...base,plugins:{...base.plugins,tooltip:{...base.plugins.tooltip,callbacks:{label:c=>`${c.parsed.y}% eng. rate`}}},scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,callback:v=>v+'%'}}}}});
-
-new Chart(document.getElementById('chart-capsim'),{type:'radar',data:{labels:['Customer Satisfaction','Market Share','Net Profit','Production Efficiency','Strategy Alignment','Innovation'],datasets:[{label:'My Score',data:[82,75,85,91,88,78],borderColor:gold,backgroundColor:'rgba(201,168,76,.13)',borderWidth:2,pointBackgroundColor:gold,pointRadius:4},{label:'Industry Avg',data:[65,60,68,72,65,62],borderColor:'rgba(255,255,255,.18)',backgroundColor:'rgba(255,255,255,.03)',borderWidth:1,borderDash:[4,3],pointBackgroundColor:'rgba(255,255,255,.25)',pointRadius:3}]},options:{plugins:{legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}},tooltip:{backgroundColor:'rgba(8,23,46,.92)',titleColor:gold,bodyColor:textColor,borderColor:'rgba(201,168,76,.2)',borderWidth:1}},scales:{r:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:textColor,backdropColor:'transparent',font:{size:8}},pointLabels:{color:textColor,font:{size:9,family:'Inter'}},angleLines:{color:'rgba(255,255,255,.05)'},min:0,max:100}}}});
-
-function gasTab(i,el){document.querySelectorAll('.gg-img').forEach((x,j)=>x.classList.toggle('gg-show',i===j));document.querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
-
-function bikeTab(i,el){document.querySelectorAll('.gg-img2').forEach((x,j)=>x.classList.toggle('gg-show2',i===j));document.getElementById('bikeGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
-
-function ytTab(i,el){document.getElementById('ytGallery').querySelectorAll('.gg-img3').forEach((x,j)=>x.classList.toggle('gg-show3',i===j));document.getElementById('ytGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
-
-function spiritTab(i,el){document.getElementById('spiritGallery').querySelectorAll('.gg-img4').forEach((x,j)=>x.classList.toggle('gg-show4',i===j));document.getElementById('spiritGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
-function whTab(i,el){document.getElementById('whGallery').querySelectorAll('.gg-img5').forEach((x,j)=>x.classList.toggle('gg-show5',i===j));document.getElementById('whGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
-
 (function(){
   const form = document.getElementById('contactForm');
   if(!form) return;
@@ -816,6 +788,34 @@ function whTab(i,el){document.getElementById('whGallery').querySelectorAll('.gg-
     });
   });
 })();
+
+const gold='#c9a84c',gold2='#e0c270',textColor='rgba(205,214,232,.65)',gridColor='rgba(255,255,255,.04)';
+const base={plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(8,23,46,.92)',titleColor:gold,bodyColor:textColor,borderColor:'rgba(201,168,76,.2)',borderWidth:1}},scales:{x:{grid:{color:gridColor},ticks:{color:textColor,font:{size:9,family:'Inter'}}},y:{grid:{color:gridColor},ticks:{color:textColor,font:{size:9,family:'Inter'}}}}};
+
+new Chart(document.getElementById('chart-gas'),{type:'bar',data:{labels:['South','Midwest','Mountain','Northeast','West','National'],datasets:[{data:[3.15,3.22,3.58,3.89,4.45,3.67],backgroundColor:['rgba(201,168,76,.45)','rgba(201,168,76,.5)','rgba(201,168,76,.6)','rgba(201,168,76,.72)','rgba(201,168,76,.88)',gold],borderRadius:4,borderSkipped:false}]},options:{...base,plugins:{...base.plugins,tooltip:{...base.plugins.tooltip,callbacks:{label:c=>`$${c.parsed.y.toFixed(2)}/gal`}}},scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,callback:v=>`$${v}`}}}}});
+
+new Chart(document.getElementById('chart-gas2'),{type:'bar',data:{labels:['Regular','Midgrade','Premium','Diesel','E85'],datasets:[{label:'Prior Year',data:[2.80,3.05,3.28,2.90,2.45],backgroundColor:'rgba(255,255,255,.09)',borderRadius:3,borderSkipped:false},{label:'Current',data:[3.67,3.95,4.22,4.43,2.98],backgroundColor:gold,borderRadius:3,borderSkipped:false}]},options:{...base,plugins:{...base.plugins,legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}}},scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,callback:v=>`$${v}`}}},barPercentage:.7,categoryPercentage:.7}});
+
+new Chart(document.getElementById('chart-covid'),{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Cases (K)',data:[12,9,6,5,8,11,15,13,10,14,22,28],borderColor:gold,backgroundColor:'rgba(201,168,76,.1)',tension:.4,fill:true,borderWidth:2,pointRadius:3,pointBackgroundColor:gold},{label:'Positivity %',data:[8,6,4,4,6,8,10,9,7,11,16,21],borderColor:'rgba(224,194,112,.55)',backgroundColor:'transparent',tension:.4,borderWidth:1.5,borderDash:[4,3],pointRadius:2,pointBackgroundColor:gold2}]},options:{...base,plugins:{...base.plugins,legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}}}}});
+
+new Chart(document.getElementById('chart-bike'),{type:'bar',data:{labels:['6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am'],datasets:[{data:[42,78,65,88,72,95,156,89,45,18],backgroundColor:ctx=>ctx.parsed.y>140?gold:ctx.parsed.y>80?'rgba(201,168,76,.6)':'rgba(201,168,76,.3)',borderRadius:4,borderSkipped:false}]},options:{...base}});
+
+new Chart(document.getElementById('chart-cta'),{type:'bar',data:{labels:['Grocery Access','Transit','Median Income','Food Security','Employment','Healthcare'],datasets:[{label:'Roseland',data:[22,45,38,30,42,35],backgroundColor:'rgba(201,168,76,.55)',borderRadius:3,borderSkipped:false},{label:'Chicago Avg',data:[68,72,58,65,61,62],backgroundColor:'rgba(255,255,255,.09)',borderRadius:3,borderSkipped:false}]},options:{...base,indexAxis:'y',plugins:{...base.plugins,legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}}},scales:{x:{...base.scales.x,max:100,ticks:{...base.scales.x.ticks,callback:v=>v}},y:{...base.scales.y}}}});
+
+new Chart(document.getElementById('chart-yt'),{type:'line',data:{labels:['Day 1','Day 7','Day 14','Day 30','Day 45','Day 60','Day 90','Day 180','Day 365'],datasets:[{data:[60,72,68,88,95,91,58,38,28],borderColor:gold,backgroundColor:'rgba(201,168,76,.1)',tension:.4,fill:true,borderWidth:2.5,pointRadius:[3,3,3,4,6,4,3,3,3],pointBackgroundColor:ctx=>ctx.dataIndex===4?gold2:gold}]},options:{...base}});
+
+new Chart(document.getElementById('chart-yt2'),{type:'bar',data:{labels:['Music','Film/Anim','Education','Gaming','Other'],datasets:[{data:[8.4,7.1,4.9,3.8,2.9],backgroundColor:[gold,'rgba(201,168,76,.78)','rgba(201,168,76,.55)','rgba(201,168,76,.38)','rgba(201,168,76,.22)'],borderRadius:3,borderSkipped:false}]},options:{...base,plugins:{...base.plugins,tooltip:{...base.plugins.tooltip,callbacks:{label:c=>`${c.parsed.y}% eng. rate`}}},scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,callback:v=>v+'%'}}}}});
+
+new Chart(document.getElementById('chart-capsim'),{type:'radar',data:{labels:['Customer Satisfaction','Market Share','Net Profit','Production Efficiency','Strategy Alignment','Innovation'],datasets:[{label:'My Score',data:[82,75,85,91,88,78],borderColor:gold,backgroundColor:'rgba(201,168,76,.13)',borderWidth:2,pointBackgroundColor:gold,pointRadius:4},{label:'Industry Avg',data:[65,60,68,72,65,62],borderColor:'rgba(255,255,255,.18)',backgroundColor:'rgba(255,255,255,.03)',borderWidth:1,borderDash:[4,3],pointBackgroundColor:'rgba(255,255,255,.25)',pointRadius:3}]},options:{plugins:{legend:{display:true,labels:{color:textColor,font:{size:9},boxWidth:8}},tooltip:{backgroundColor:'rgba(8,23,46,.92)',titleColor:gold,bodyColor:textColor,borderColor:'rgba(201,168,76,.2)',borderWidth:1}},scales:{r:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:textColor,backdropColor:'transparent',font:{size:8}},pointLabels:{color:textColor,font:{size:9,family:'Inter'}},angleLines:{color:'rgba(255,255,255,.05)'},min:0,max:100}}}});
+
+function gasTab(i,el){document.querySelectorAll('.gg-img').forEach((x,j)=>x.classList.toggle('gg-show',i===j));document.querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+
+function bikeTab(i,el){document.querySelectorAll('.gg-img2').forEach((x,j)=>x.classList.toggle('gg-show2',i===j));document.getElementById('bikeGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+
+function ytTab(i,el){document.getElementById('ytGallery').querySelectorAll('.gg-img3').forEach((x,j)=>x.classList.toggle('gg-show3',i===j));document.getElementById('ytGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+
+function spiritTab(i,el){document.getElementById('spiritGallery').querySelectorAll('.gg-img4').forEach((x,j)=>x.classList.toggle('gg-show4',i===j));document.getElementById('spiritGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+function whTab(i,el){document.getElementById('whGallery').querySelectorAll('.gg-img5').forEach((x,j)=>x.classList.toggle('gg-show5',i===j));document.getElementById('whGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 </script>
 </body>
 </html>
