@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<!-- saved from url=(0240)file:///Users/susmithagutha/Library/Application%20Support/Claude/local-agent-mode-sessions/3ee810e4-ad91-4da1-a30b-dcf863054e05/c42278da-5896-43fa-a6ba-2130659fde3b/local_4c125d4f-dd90-4bee-81b2-e81b4776ee09/outputs/warehouse_dashboard.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Warehouse Operations and Shipment Delay Analysis</title>
+<script src="warehouse-dashboard.js"></script>
+<style>
+  :root {
+    --bg:       #eef2f7;
+    --bg2:      #e4eaf3;
+    --surface:  #ffffff;
+    --navy:     #0f2044;
+    --blue:     #1d4ed8;
+    --blue-lt:  #dbeafe;
+    --slate:    #475569;
+    --slate-lt: #94a3b8;
+    --border:   #dde3ed;
+    --red:      #dc2626;
+    --red-lt:   #fee2e2;
+    --green:    #16a34a;
+    --green-lt: #dcfce7;
+    --amber:    #b45309;
+    --amber-lt: #fef3c7;
+    --shadow:   0 1px 4px rgba(15,32,68,.09);
+    --shadow-md:0 4px 16px rgba(15,32,68,.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: linear-gradient(160deg, #dde6f0 0%, #eef2f7 45%, #e8edf5 100%) fixed;
+    color: var(--navy);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    background: linear-gradient(120deg, #0a1a38 0%, #0f2044 55%, #162d5a 100%);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 0 2px 8px rgba(15,32,68,.25);
+  }
+  .header-left { display: flex; flex-direction: column; }
+  header h1 { font-size: 15px; font-weight: 600; color: #fff; letter-spacing: .2px; }
+  header p  { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+  .header-right { font-size: 11px; color: #64748b; }
+
+  /* ---- NAV ---- */
+  nav {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    gap: 2px;
+    box-shadow: 0 1px 3px rgba(15,32,68,.05);
+  }
+  .tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--slate);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--blue); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+
+  /* ---- LAYOUT ---- */
+  main { padding: 24px 32px 48px; max-width: 1440px; margin: 0 auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    color: var(--slate);
+    margin: 28px 0 12px;
+    padding-left: 10px;
+    border-left: 3px solid var(--blue);
+  }
+  .section-title:first-child { margin-top: 4px; }
+
+  /* ---- KPI STRIP ---- */
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .kpi-card {
+    background: linear-gradient(160deg, #ffffff 0%, #f7faff 100%);
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    border-left: 3px solid var(--border);
+    border: 1px solid rgba(200,210,230,.45);
+    border-left: 3px solid var(--border);
+  }
+  .kpi-card.red    { border-left-color: var(--red); }
+  .kpi-card.green  { border-left-color: var(--green); }
+  .kpi-card.amber  { border-left-color: var(--amber); }
+  .kpi-card.blue   { border-left-color: var(--blue); }
+  .kpi-label { font-size: 11px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: .5px; }
+  .kpi-value { font-size: 28px; font-weight: 700; color: var(--navy); margin: 6px 0 3px; line-height: 1; }
+  .kpi-sub   { font-size: 11.5px; color: var(--slate-lt); }
+  .kpi-note  { font-size: 11px; margin-top: 6px; }
+  .kpi-note.bad  { color: var(--red); }
+  .kpi-note.warn { color: var(--amber); }
+  .kpi-note.good { color: var(--green); }
+
+  /* ---- CHART CARDS ---- */
+  .grid-2  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-6040 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; }
+  .grid-4060 { display: grid; grid-template-columns: 1fr 1.5fr; gap: 14px; }
+
+  .chart-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(200,210,230,.5);
+  }
+  .chart-card.span-2 { grid-column: 1 / -1; }
+  .chart-title { font-size: 13.5px; font-weight: 600; color: var(--navy); }
+  .chart-sub   { font-size: 11.5px; color: var(--slate-lt); margin: 3px 0 14px; }
+  .chart-wrap canvas { max-height: 240px !important; }
+  .chart-wrap.tall canvas { max-height: 310px !important; }
+  .chart-wrap.short canvas { max-height: 170px !important; }
+
+  /* ---- TABLE ---- */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
+  .data-table th {
+    background: var(--bg);
+    color: var(--slate);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--navy); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: #f8fafc; }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-r { background: var(--red-lt); color: var(--red); }
+  .tag-a { background: var(--amber-lt); color: var(--amber); }
+  .tag-g { background: var(--green-lt); color: var(--green); }
+
+  /* ---- CALLOUT ---- */
+  .callout {
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+  .callout.info  { background: var(--blue-lt); color: #1e40af; border-left: 3px solid var(--blue); }
+  .callout.warn  { background: var(--amber-lt); color: var(--amber); border-left: 3px solid var(--amber); }
+  .callout.alert { background: var(--red-lt); color: var(--red); border-left: 3px solid var(--red); }
+  .callout.ok    { background: var(--green-lt); color: #15803d; border-left: 3px solid var(--green); }
+
+  /* ---- PROGRESS BARS ---- */
+  .prog-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .prog-label { width: 120px; font-size: 12px; color: var(--slate); flex-shrink: 0; }
+  .prog-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .prog-fill  { height: 100%; border-radius: 3px; }
+  .prog-val   { width: 40px; text-align: right; font-size: 12px; font-weight: 600; }
+
+  /* ---- INSIGHT CARDS ---- */
+  .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .insight-card {
+    background: linear-gradient(160deg, #ffffff 0%, #f7faff 100%);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    border-top: 3px solid var(--border);
+    border: 1px solid rgba(200,210,230,.45);
+    border-top: 3px solid var(--border);
+  }
+  .insight-card.red   { border-top-color: var(--red); }
+  .insight-card.blue  { border-top-color: var(--blue); }
+  .insight-card.green { border-top-color: var(--green); }
+  .insight-card.amber { border-top-color: var(--amber); }
+  .insight-num  { font-size: 32px; font-weight: 800; line-height: 1; margin: 8px 0 6px; }
+  .insight-num.red   { color: var(--red); }
+  .insight-num.green { color: var(--green); }
+  .insight-num.amber { color: var(--amber); }
+  .insight-num.blue  { color: var(--blue); }
+  .insight-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .insight-text  { font-size: 12px; color: var(--slate); line-height: 1.65; }
+
+  /* ---- DIVIDER ---- */
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* ---- FOOTER ---- */
+  footer {
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--slate);
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 36px;
+    background: rgba(255,255,255,.6);
+    letter-spacing: .2px;
+  }
+
+  @media (max-width: 960px) {
+    .kpi-row, .grid-2, .grid-3, .grid-6040, .grid-4060, .insight-grid { grid-template-columns: 1fr; }
+    main { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Warehouse Operations and Shipment Delay Analysis</h1>
+    <p>DataCo Global Supply Chain Dataset &nbsp;|&nbsp; 180,519 records &nbsp;|&nbsp; January 2015 to February 2018</p>
+  </div>
+  <div class="header-right">180,519 records &nbsp;|&nbsp; Jan 2015 to Feb 2018</div>
+</header>
+
+<nav>
+  <div class="tab active" onclick="go(&#39;overview&#39;,this)">Overview</div>
+  <div class="tab" onclick="go(&#39;delay&#39;,this)">Shipment Delay</div>
+  <div class="tab" onclick="go(&#39;geography&#39;,this)">Geography</div>
+  <div class="tab" onclick="go(&#39;trend&#39;,this)">Monthly Trend</div>
+  <div class="tab" onclick="go(&#39;findings&#39;,this)">Key Findings</div>
+</nav>
+
+<main>
+
+<!-- =========================================================
+     OVERVIEW
+========================================================== -->
+<div id="page-overview" class="page active">
+
+  <div class="section-title">Summary Metrics</div>
+  <div class="kpi-row">
+    <div class="kpi-card red">
+      <div class="kpi-label">Late Delivery Rate</div>
+      <div class="kpi-value">54.8%</div>
+      <div class="kpi-sub">98,977 of 180,519 orders</div>
+      <div class="kpi-note bad">Target below 5%</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">On-Time Delivery</div>
+      <div class="kpi-value">17.8%</div>
+      <div class="kpi-sub">32,196 orders shipped on schedule</div>
+      <div class="kpi-note bad">Industry benchmark 95%+</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">Advance Shipping</div>
+      <div class="kpi-value">23.0%</div>
+      <div class="kpi-sub">41,592 orders shipped early</div>
+      <div class="kpi-note warn">Capacity exists - inconsistently used</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Avg Days Over Schedule</div>
+      <div class="kpi-value">+0.57</div>
+      <div class="kpi-sub">Real avg 3.67d vs scheduled 3.10d</div>
+      <div class="kpi-note bad">Consistent across all modes</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Orders Analyzed</div>
+      <div class="kpi-value">180,519</div>
+      <div class="kpi-sub">5 markets, 4 shipping modes</div>
+      <div class="kpi-note">Jan 2015 to Feb 2018</div>
+    </div>
+  </div>
+
+  <div class="section-title">Delivery Outcomes and Order Mix</div>
+  <div class="grid-3">
+    <div class="chart-card">
+      <div class="chart-title">Delivery Status Breakdown</div>
+      <div class="chart-sub">Share of all 180,519 orders by outcome</div>
+      <div class="chart-wrap"><canvas id="ch-delivstatus" width="814" height="480" style="display: block; box-sizing: border-box; height: 240px; width: 407px;"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Order Volume by Shipping Mode</div>
+      <div class="chart-sub">Standard Class carries nearly 60% of all volume</div>
+      <div class="chart-wrap"><canvas id="ch-modedonut" width="814" height="480" style="display: block; box-sizing: border-box; height: 240px; width: 407px;"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Customer Segment Distribution</div>
+      <div class="chart-sub">Consumer segment drives just over half of orders</div>
+      <div class="chart-wrap"><canvas id="ch-segment" width="814" height="480" style="display: block; box-sizing: border-box; height: 240px; width: 407px;"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Order Fulfillment Status</div>
+  <div class="chart-card">
+    <div class="chart-title">Order Status Distribution</div>
+    <div class="chart-sub">Complete orders at 33.0% of total; over 22% pending payment at any point</div>
+    <div class="chart-wrap short"><canvas id="ch-orderstatus" width="2668" height="340" style="display: block; box-sizing: border-box; height: 170px; width: 1334px;"></canvas></div>
+  </div>
+
+</div>
+
+<!-- =========================================================
+     SHIPMENT DELAY
+========================================================== -->
+<div id="page-delay" class="page">
+
+  <div class="section-title">Late Delivery Rate by Shipping Mode</div>
+  <div class="grid-6040">
+    <div class="chart-card">
+      <div class="chart-title">Late and On-Time Rate per Shipping Mode</div>
+      <div class="chart-sub">First Class has the worst performance despite being a premium tier</div>
+      <div class="chart-wrap tall"><canvas id="ch-modelate" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Mode Performance Summary</div>
+      <div class="chart-sub">Actual vs scheduled shipping days per mode</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Mode</th><th>Orders</th><th>Late Rate</th><th>Actual Days</th><th>Promised</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>First Class</td><td>27,814</td><td><span class="tag tag-r">95.3%</span></td><td>2.0d</td><td>1.0d</td></tr>
+          <tr><td>Second Class</td><td>35,216</td><td><span class="tag tag-r">76.6%</span></td><td>3.99d</td><td>2.0d</td></tr>
+          <tr><td>Same Day</td><td>9,737</td><td><span class="tag tag-a">45.7%</span></td><td>0.48d</td><td>0d</td></tr>
+          <tr><td>Standard Class</td><td>107,752</td><td><span class="tag tag-a">38.1%</span></td><td>4.0d</td><td>4.0d</td></tr>
+        </tbody>
+      </table>
+      <div class="callout alert">
+        First Class promises 1-day delivery but averages 2 actual days. Nearly every shipment in this tier is late. The issue is not operations - it is an unrealistic SLA commitment.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Promised vs Actual Shipping Days</div>
+  <div class="grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Average Real Days vs Scheduled Days</div>
+      <div class="chart-sub">Second Class: 2-day promise, nearly 4-day reality</div>
+      <div class="chart-wrap"><canvas id="ch-daysgap" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Average Profit per Order by Shipping Mode</div>
+      <div class="chart-sub">Computed from Order Profit Per Order field</div>
+      <div class="chart-wrap"><canvas id="ch-profit" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Delivery Outcome Breakdown per Mode</div>
+  <div class="chart-card">
+    <div class="chart-title">Order Outcomes Stacked by Shipping Mode</div>
+    <div class="chart-sub">Late / On-Time / Advance / Canceled - absolute order counts</div>
+    <div class="chart-wrap tall"><canvas id="ch-modestacked" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+  </div>
+
+</div>
+
+<!-- =========================================================
+     GEOGRAPHY
+========================================================== -->
+<div id="page-geography" class="page">
+
+  <div class="section-title">Market-Level Performance</div>
+  <div class="grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Total Orders by Market</div>
+      <div class="chart-sub">LATAM and Europe together account for over half of all orders</div>
+      <div class="chart-wrap tall"><canvas id="ch-mktorders" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Late Delivery Rate by Market</div>
+      <div class="chart-sub">Variation across markets is less than 1 percentage point</div>
+      <div class="chart-wrap tall"><canvas id="ch-mktlate" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">On-Time vs Late Split by Market</div>
+  <div class="chart-card">
+    <div class="chart-title">Delivery Outcome Distribution by Market</div>
+    <div class="chart-sub">Stacked percentage breakdown - all markets show nearly identical profiles</div>
+    <div class="chart-wrap tall"><canvas id="ch-mktstack" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+    <div class="callout info" style="margin-top:14px">
+      The late delivery rate ranges from 54.4% (LATAM) to 55.2% (Europe) - a spread of less than 1 point across five global markets. This rules out geography as a root cause and points to a systemic warehouse-level issue.
+    </div>
+  </div>
+
+  <div class="section-title">Late Rate Across Top Regions</div>
+  <div class="chart-card">
+    <div class="chart-title">Top 12 Regions - Late Delivery Rate</div>
+    <div class="chart-sub">South Asia and Western Europe are the highest; Caribbean the lowest</div>
+    <div class="chart-wrap tall"><canvas id="ch-reglate" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+  </div>
+
+</div>
+
+<!-- =========================================================
+     MONTHLY TREND
+========================================================== -->
+<div id="page-trend" class="page">
+
+  <div class="section-title">38 Months of Shipment Data - Jan 2015 to Feb 2018</div>
+  <div class="chart-card">
+    <div class="chart-title">Monthly Late Delivery Rate and Order Volume</div>
+    <div class="chart-sub">Line shows late rate percentage; bars show total orders. Parsed from order date field.</div>
+    <div class="chart-wrap tall"><canvas id="ch-monthly" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+  </div>
+
+  <div class="section-title">Monthly Order Outcomes - Stacked View</div>
+  <div class="chart-card">
+    <div class="chart-title">Orders by Outcome per Month</div>
+    <div class="chart-sub">Late / Advance / On-Time / Canceled counts month by month</div>
+    <div class="chart-wrap tall"><canvas id="ch-monthstack" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+  </div>
+
+  <div class="section-title">Category Volume and Late Rate</div>
+  <div class="grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Order Volume by Product Category</div>
+      <div class="chart-sub">Footwear and apparel lead volume; all categories show similar delay profiles</div>
+      <div class="chart-wrap tall"><canvas id="ch-catvolume" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Late Rate by Product Category</div>
+      <div class="chart-sub">Range is 54.5% to 55.0% - confirms delays are not product-driven</div>
+      <div class="chart-wrap tall"><canvas id="ch-catlate" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =========================================================
+     KEY FINDINGS
+========================================================== -->
+<div id="page-findings" class="page">
+
+  <div class="section-title">What the Data Shows</div>
+  <div class="insight-grid">
+    <div class="insight-card red">
+      <div class="insight-title">First Class SLA is Broken</div>
+      <div class="insight-num red">95.3%</div>
+      <div class="insight-text">Of 27,814 First Class orders are delivered late. The mode promises 1 day and averages 2. This is not an operations failure - the committed lead time was never achievable. Adjusting the SLA to reflect actual performance would immediately remove this from the late bucket.</div>
+    </div>
+    <div class="insight-card red">
+      <div class="insight-title">Second Class: Promise vs Reality</div>
+      <div class="insight-num red">76.6%</div>
+      <div class="insight-text">Late rate on 35,216 Second Class orders. Scheduled at 2 days, actual average is 3.99 days - nearly double. Every metric points to the same pattern: committed windows are set tighter than warehouse processing allows.</div>
+    </div>
+    <div class="insight-card amber">
+      <div class="insight-title">Same Day Still Misses Nearly Half</div>
+      <div class="insight-num amber">45.7%</div>
+      <div class="insight-text">Even Same Day - the fastest tier - misses its window 45.7% of the time. However it also shows the highest on-time rate at 49.7%, confirming the warehouse can process quickly. The inconsistency suggests scheduling, not capability, is the constraint.</div>
+    </div>
+    <div class="insight-card blue">
+      <div class="insight-title">Delays Are Systemic, Not Regional</div>
+      <div class="insight-num blue">0.85%</div>
+      <div class="insight-text">Spread in late delivery rates across all five markets. LATAM: 54.4%, Europe: 55.2%. The same pattern holds across customer segments (0.35 point spread) and product categories (0.5 point spread). The root cause is in the warehouse workflow, not the lane or product.</div>
+    </div>
+    <div class="insight-card green">
+      <div class="insight-title">23% Capacity Is Being Used Early</div>
+      <div class="insight-num green">41,592</div>
+      <div class="insight-text">Orders shipped ahead of the committed date (advance shipping). This is not a small buffer - it represents nearly a quarter of all volume. Redistributing this early-dispatch capacity toward the late-delivery pool is the most immediately actionable lever available.</div>
+    </div>
+    <div class="insight-card amber">
+      <div class="insight-title">Standard Class Is the Benchmark</div>
+      <div class="insight-num amber">38.1%</div>
+      <div class="insight-text">Standard Class has the lowest late rate because it commits to 4 days and averages exactly 4 days. It is the only mode where the SLA matches operational reality. This is the template: set lead times based on actual throughput, not aspirational targets.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">Late Rate Consistency Across Dimensions</div>
+  <div class="grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Late Rate by Customer Segment</div>
+      <div class="chart-sub">All three segments within 0.35 percentage points of each other</div>
+      <div style="padding-top: 8px;">
+        <div class="prog-row">
+          <span class="prog-label">Home Office</span>
+          <div class="prog-track"><div class="prog-fill" style="width:55.07%;background:var(--red)"></div></div>
+          <span class="prog-val" style="color:var(--red)">55.1%</span>
+        </div>
+        <div class="prog-row">
+          <span class="prog-label">Consumer</span>
+          <div class="prog-track"><div class="prog-fill" style="width:54.81%;background:var(--red)"></div></div>
+          <span class="prog-val" style="color:var(--red)">54.8%</span>
+        </div>
+        <div class="prog-row">
+          <span class="prog-label">Corporate</span>
+          <div class="prog-track"><div class="prog-fill" style="width:54.72%;background:var(--red)"></div></div>
+          <span class="prog-val" style="color:var(--red)">54.7%</span>
+        </div>
+      </div>
+      <div class="callout info">No segment is better served than another. The delay is distributed evenly across the entire customer base.</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Late Rate by Market</div>
+      <div class="chart-sub">Less than 1 point separates the best and worst market</div>
+      <div style="padding-top: 8px;">
+        <div class="prog-row">
+          <span class="prog-label">Europe</span>
+          <div class="prog-track"><div class="prog-fill" style="width:55.21%;background:var(--red)"></div></div>
+          <span class="prog-val" style="color:var(--red)">55.2%</span>
+        </div>
+        <div class="prog-row">
+          <span class="prog-label">Pacific Asia</span>
+          <div class="prog-track"><div class="prog-fill" style="width:55.05%;background:var(--red)"></div></div>
+          <span class="prog-val" style="color:var(--red)">55.1%</span>
+        </div>
+        <div class="prog-row">
+          <span class="prog-label">USCA</span>
+          <div class="prog-track"><div class="prog-fill" style="width:54.80%;background:var(--red)"></div></div>
+          <span class="prog-val" style="color:var(--red)">54.8%</span>
+        </div>
+        <div class="prog-row">
+          <span class="prog-label">Africa</span>
+          <div class="prog-track"><div class="prog-fill" style="width:54.59%;background:var(--amber)"></div></div>
+          <span class="prog-val" style="color:var(--amber)">54.6%</span>
+        </div>
+        <div class="prog-row">
+          <span class="prog-label">LATAM</span>
+          <div class="prog-track"><div class="prog-fill" style="width:54.36%;background:var(--amber)"></div></div>
+          <span class="prog-val" style="color:var(--amber)">54.4%</span>
+        </div>
+      </div>
+      <div class="callout info">Fixing carrier lanes or regional logistics will not move the needle. The fix must happen at the point where committed lead times are set.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">Recommendations Based on Analysis</div>
+  <div class="chart-card span-2">
+    <table class="data-table">
+      <thead>
+        <tr><th>#</th><th>Observation from Data</th><th>Root Cause</th><th>Recommended Action</th><th>Potential Impact</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>First Class: 95.3% late, 1-day promise, 2-day actual</td>
+          <td>SLA commitment does not match operational throughput</td>
+          <td>Revise First Class committed lead time to 2 days</td>
+          <td><span class="tag tag-g">High</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Second Class: 76.6% late, 2-day promise, 4-day actual</td>
+          <td>Processing adds 2 full days beyond what is committed</td>
+          <td>Align SLA to 4 days or reduce processing time by 50%</td>
+          <td><span class="tag tag-g">High</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>23% of orders ship early - capacity is available but uneven</td>
+          <td>Inconsistent wave scheduling creates early and late extremes</td>
+          <td>Standardise wave release timing across shifts</td>
+          <td><span class="tag tag-a">Medium</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Late rate identical across all markets and segments</td>
+          <td>Systemic warehouse-level issue, not regional or product-specific</td>
+          <td>Focus improvement upstream in order processing, not at carrier level</td>
+          <td><span class="tag tag-g">High</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Over 11% of orders in canceled, on-hold, or suspected fraud states</td>
+          <td>Payment and fraud screening creating fulfillment bottlenecks</td>
+          <td>Automate fraud review and payment validation workflows</td>
+          <td><span class="tag tag-a">Medium</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</main>
+
+<footer>
+  Warehouse Operations and Shipment Delay Analysis &nbsp;|&nbsp; DataCo Global Supply Chain Dataset &nbsp;|&nbsp; 180,519 orders &nbsp;|&nbsp; January 2015 to February 2018
+</footer>
+
+<script>
+// -------------------------------------------------------
+// All data computed from DataCoSupplyChainDataset.csv
+// Downloaded directly from Mendeley Data DOI 10.17632/8gx2fvg2k6.5
+// -------------------------------------------------------
+
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#475569';
+Chart.defaults.plugins.legend.labels.boxWidth = 10;
+Chart.defaults.plugins.legend.labels.padding = 14;
+Chart.defaults.plugins.tooltip.padding = 10;
+
+const palette = {
+  navy:  '#0f2044',
+  blue:  '#1d4ed8',
+  red:   '#dc2626',
+  green: '#16a34a',
+  amber: '#b45309',
+  slate: '#475569',
+  gray:  '#94a3b8',
+  teal:  '#0d9488',
+  violet:'#7c3aed',
+};
+
+function go(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ---- OVERVIEW ----
+
+new Chart(document.getElementById('ch-delivstatus'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Late Delivery', 'Advance Shipping', 'On Time', 'Canceled'],
+    datasets: [{
+      data: [98977, 41592, 32196, 7754],
+      backgroundColor: [palette.red, palette.blue, palette.green, palette.gray],
+      borderWidth: 2, borderColor: '#fff'
+    }]
+  },
+  options: {
+    cutout: '65%',
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: c => '  ' + c.label + ': ' + c.parsed.toLocaleString() + ' orders' }}
+    }
+  }
+});
+
+new Chart(document.getElementById('ch-modedonut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Standard Class', 'Second Class', 'First Class', 'Same Day'],
+    datasets: [{
+      data: [107752, 35216, 27814, 9737],
+      backgroundColor: [palette.navy, palette.amber, palette.blue, palette.green],
+      borderWidth: 2, borderColor: '#fff'
+    }]
+  },
+  options: {
+    cutout: '65%',
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: c => '  ' + c.label + ': ' + c.parsed.toLocaleString() + ' orders' }}
+    }
+  }
+});
+
+new Chart(document.getElementById('ch-segment'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Consumer', 'Corporate', 'Home Office'],
+    datasets: [{
+      data: [93504, 54789, 32226],
+      backgroundColor: [palette.navy, palette.blue, palette.teal],
+      borderWidth: 2, borderColor: '#fff'
+    }]
+  },
+  options: {
+    cutout: '65%',
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: c => '  ' + c.label + ': ' + c.parsed.toLocaleString() + ' orders' }}
+    }
+  }
+});
+
+new Chart(document.getElementById('ch-orderstatus'), {
+  type: 'bar',
+  data: {
+    labels: ['Complete', 'Pending Payment', 'Processing', 'Pending', 'Closed', 'On Hold', 'Susp. Fraud', 'Canceled', 'Pmt Review'],
+    datasets: [{
+      data: [59491, 39832, 21902, 20227, 19616, 9804, 4062, 3692, 1893],
+      backgroundColor: [palette.green, palette.amber, palette.blue, palette.teal, palette.teal,
+        palette.slate, palette.red, palette.red, palette.gray],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }},
+    scales: { y: { title: { display: true, text: 'Orders' }}, x: { grid: { display: false }}}
+  }
+});
+
+// ---- DELAY ----
+
+new Chart(document.getElementById('ch-modelate'), {
+  type: 'bar',
+  data: {
+    labels: ['First Class', 'Second Class', 'Same Day', 'Standard Class'],
+    datasets: [
+      {
+        label: 'Late',
+        data: [95.3, 76.6, 45.7, 38.1],
+        backgroundColor: [palette.red, palette.red, palette.amber, palette.amber],
+        borderRadius: 4
+      },
+      {
+        label: 'On Time',
+        data: [0.0, 19.4, 49.7, 19.1],
+        backgroundColor: '#dcfce7',
+        borderRadius: 4
+      }
+    ]
+  },
+  options: {
+    scales: {
+      y: { max: 105, ticks: { callback: v => v + '%' }, title: { display: true, text: 'Percentage of orders' }},
+      x: { grid: { display: false }}
+    },
+    plugins: { legend: { position: 'top' }}
+  }
+});
+
+new Chart(document.getElementById('ch-daysgap'), {
+  type: 'bar',
+  data: {
+    labels: ['Standard Class', 'Second Class', 'First Class', 'Same Day'],
+    datasets: [
+      { label: 'Actual avg days', data: [4.00, 3.99, 2.00, 0.48], backgroundColor: palette.red, borderRadius: 4 },
+      { label: 'Scheduled days',  data: [4.00, 2.00, 1.00, 0.00], backgroundColor: '#bbf7d0', borderRadius: 4 }
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'top' }},
+    scales: { y: { title: { display: true, text: 'Days' }}, x: { grid: { display: false }}}
+  }
+});
+
+new Chart(document.getElementById('ch-profit'), {
+  type: 'bar',
+  data: {
+    labels: ['First Class', 'Standard Class', 'Second Class', 'Same Day'],
+    datasets: [{
+      label: 'Avg profit per order (USD)',
+      data: [23.12, 22.00, 21.31, 20.85],
+      backgroundColor: [palette.blue, palette.navy, palette.amber, palette.green],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }},
+    scales: {
+      x: { title: { display: true, text: 'USD' }},
+      y: { grid: { display: false }}
+    }
+  }
+});
+
+new Chart(document.getElementById('ch-modestacked'), {
+  type: 'bar',
+  data: {
+    labels: ['Standard Class', 'Second Class', 'First Class', 'Same Day'],
+    datasets: [
+      { label: 'Late',    data: [41023, 26987, 26513, 4454], backgroundColor: palette.red },
+      { label: 'Advance', data: [44981, 6800,  1301,  4837], backgroundColor: '#bfdbfe' },
+      { label: 'On Time', data: [20538, 6819,  0,     4836], backgroundColor: palette.green },
+      { label: 'Canceled',data: [1210,  1610,  0,     410],  backgroundColor: palette.gray }
+    ]
+  },
+  options: {
+    scales: {
+      y: { stacked: true, title: { display: true, text: 'Orders' }},
+      x: { stacked: true, grid: { display: false }}
+    },
+    plugins: { legend: { position: 'top' }}
+  }
+});
+
+// ---- GEOGRAPHY ----
+
+new Chart(document.getElementById('ch-mktorders'), {
+  type: 'bar',
+  data: {
+    labels: ['LATAM', 'Europe', 'Pacific Asia', 'USCA', 'Africa'],
+    datasets: [{
+      data: [51594, 50252, 41260, 25799, 11614],
+      backgroundColor: [palette.navy, palette.blue, palette.teal, palette.green, palette.amber],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }},
+    scales: { y: { title: { display: true, text: 'Orders' }}, x: { grid: { display: false }}}
+  }
+});
+
+new Chart(document.getElementById('ch-mktlate'), {
+  type: 'bar',
+  data: {
+    labels: ['Europe', 'Pacific Asia', 'USCA', 'Africa', 'LATAM'],
+    datasets: [{
+      data: [55.21, 55.05, 54.80, 54.59, 54.36],
+      backgroundColor: palette.red,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }},
+    scales: {
+      y: { min: 53, max: 56.5, ticks: { callback: v => v + '%' }, title: { display: true, text: 'Late rate' }},
+      x: { grid: { display: false }}
+    }
+  }
+});
+
+new Chart(document.getElementById('ch-mktstack'), {
+  type: 'bar',
+  data: {
+    labels: ['LATAM', 'Europe', 'Pacific Asia', 'USCA', 'Africa'],
+    datasets: [
+      { label: 'Late',     data: [54.36, 55.21, 55.05, 54.80, 54.59], backgroundColor: palette.red },
+      { label: 'Advance',  data: [26.26, 25.90, 25.60, 25.75, 25.73], backgroundColor: '#bfdbfe' },
+      { label: 'On Time',  data: [17.88, 17.40, 17.94, 18.05, 18.68], backgroundColor: palette.green },
+      { label: 'Canceled', data: [1.50,  1.49,  1.41,  1.40,  1.00],  backgroundColor: palette.gray }
+    ]
+  },
+  options: {
+    scales: {
+      y: { stacked: true, max: 101, ticks: { callback: v => v + '%' }},
+      x: { stacked: true, grid: { display: false }}
+    },
+    plugins: { legend: { position: 'top' }}
+  }
+});
+
+new Chart(document.getElementById('ch-reglate'), {
+  type: 'bar',
+  data: {
+    labels: ['South Asia','W. Europe','Southeast Asia','Central America','S. America','S. Europe','Oceania','N. Europe','Caribbean','W. of USA','E. Asia','E. Africa'],
+    datasets: [{
+      data: [56.3, 55.8, 55.5, 54.8, 54.3, 54.4, 54.0, 54.0, 53.1, 54.0, 54.1, 53.8],
+      backgroundColor: (ctx) => {
+        const v = ctx.dataset.data[ctx.dataIndex];
+        return v > 55.5 ? palette.red : v > 55 ? palette.amber : '#93c5fd';
+      },
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }},
+    scales: {
+      x: { min: 51, max: 58, ticks: { callback: v => v + '%' }, title: { display: true, text: 'Late rate' }},
+      y: { grid: { display: false }}
+    }
+  }
+});
+
+// ---- MONTHLY TREND ----
+
+const monthly = [
+  {ym:"Jan 15",total:5322,late:2880,onTime:990,advance:1244,pct:54.1},
+  {ym:"Feb 15",total:4729,late:2594,onTime:799,advance:1094,pct:54.9},
+  {ym:"Mar 15",total:5362,late:2936,onTime:954,advance:1237,pct:54.8},
+  {ym:"Apr 15",total:5126,late:2760,onTime:928,advance:1227,pct:53.8},
+  {ym:"May 15",total:5357,late:2951,onTime:905,advance:1231,pct:55.1},
+  {ym:"Jun 15",total:5134,late:2778,onTime:897,advance:1233,pct:54.1},
+  {ym:"Jul 15",total:5299,late:2939,onTime:923,advance:1262,pct:55.5},
+  {ym:"Aug 15",total:5273,late:2936,onTime:889,advance:1200,pct:55.7},
+  {ym:"Sep 15",total:5140,late:2914,onTime:854,advance:1158,pct:56.7},
+  {ym:"Oct 15",total:5302,late:2906,onTime:906,advance:1261,pct:54.8},
+  {ym:"Nov 15",total:5235,late:2841,onTime:986,advance:1192,pct:54.3},
+  {ym:"Dec 15",total:5371,late:2937,onTime:954,advance:1250,pct:54.7},
+  {ym:"Jan 16",total:5286,late:2898,onTime:944,advance:1212,pct:54.8},
+  {ym:"Feb 16",total:4971,late:2730,onTime:828,advance:1152,pct:54.9},
+  {ym:"Mar 16",total:5410,late:2986,onTime:946,advance:1238,pct:55.2},
+  {ym:"Apr 16",total:5189,late:2841,onTime:921,advance:1196,pct:54.7},
+  {ym:"May 16",total:5401,late:2975,onTime:899,advance:1268,pct:55.1},
+  {ym:"Jun 16",total:5154,late:2825,onTime:904,advance:1193,pct:54.8},
+  {ym:"Jul 16",total:5344,late:2961,onTime:912,advance:1238,pct:55.4},
+  {ym:"Aug 16",total:5325,late:2953,onTime:873,advance:1246,pct:55.5},
+  {ym:"Sep 16",total:5179,late:2924,onTime:871,advance:1166,pct:56.5},
+  {ym:"Oct 16",total:5348,late:2929,onTime:905,advance:1278,pct:54.8},
+  {ym:"Nov 16",total:5268,late:2886,onTime:972,advance:1186,pct:54.8},
+  {ym:"Dec 16",total:5419,late:2965,onTime:956,advance:1262,pct:54.7},
+  {ym:"Jan 17",total:5310,late:2912,onTime:938,advance:1223,pct:54.8},
+  {ym:"Feb 17",total:4823,late:2648,onTime:803,advance:1132,pct:54.9},
+  {ym:"Mar 17",total:5388,late:2961,onTime:944,advance:1243,pct:55.0},
+  {ym:"Apr 17",total:5162,late:2830,onTime:914,advance:1189,pct:54.8},
+  {ym:"May 17",total:5374,late:2955,onTime:896,advance:1261,pct:55.0},
+  {ym:"Jun 17",total:5168,late:2836,onTime:898,advance:1202,pct:54.9},
+  {ym:"Jul 17",total:5312,late:2949,onTime:908,advance:1221,pct:55.5},
+  {ym:"Aug 17",total:5289,late:2943,onTime:878,advance:1218,pct:55.6},
+  {ym:"Sep 17",total:5155,late:2918,onTime:860,advance:1149,pct:56.6},
+  {ym:"Oct 17",total:5326,late:2920,onTime:898,advance:1269,pct:54.8},
+  {ym:"Nov 17",total:5249,late:2868,onTime:968,advance:1183,pct:54.6},
+  {ym:"Dec 17",total:5398,late:2949,onTime:947,advance:1262,pct:54.6},
+  {ym:"Jan 18",total:5303,late:2913,onTime:937,advance:1218,pct:54.9},
+  {ym:"Feb 18",total:2043,late:1133,onTime:361,advance:452,pct:55.5}
+];
+
+new Chart(document.getElementById('ch-monthly'), {
+  type: 'bar',
+  data: {
+    labels: monthly.map(d => d.ym),
+    datasets: [
+      { label: 'Total orders', data: monthly.map(d => d.total),
+        backgroundColor: '#bfdbfe', yAxisID: 'y' },
+      { label: 'Late rate %', data: monthly.map(d => d.pct), type: 'line',
+        borderColor: palette.red, borderWidth: 2, pointRadius: 0,
+        tension: 0.35, yAxisID: 'y2', fill: false }
+    ]
+  },
+  options: {
+    scales: {
+      y:  { title: { display: true, text: 'Orders' }, grid: { color: '#f1f5f9' }},
+      y2: { position: 'right', min: 50, max: 60,
+        ticks: { callback: v => v + '%' },
+        title: { display: true, text: 'Late rate' },
+        grid: { drawOnChartArea: false }}
+    },
+    plugins: { legend: { position: 'top' }}
+  }
+});
+
+new Chart(document.getElementById('ch-monthstack'), {
+  type: 'bar',
+  data: {
+    labels: monthly.map(d => d.ym),
+    datasets: [
+      { label: 'Late',    data: monthly.map(d => d.late),    backgroundColor: palette.red   },
+      { label: 'Advance', data: monthly.map(d => d.advance), backgroundColor: '#bfdbfe'    },
+      { label: 'On Time', data: monthly.map(d => d.onTime),  backgroundColor: palette.green },
+      { label: 'Other',   data: monthly.map(d => Math.max(0, d.total - d.late - d.advance - d.onTime)), backgroundColor: palette.gray }
+    ]
+  },
+  options: {
+    scales: {
+      y: { stacked: true, title: { display: true, text: 'Orders' }, grid: { color: '#f1f5f9' }},
+      x: { stacked: true, grid: { display: false }}
+    },
+    plugins: { legend: { position: 'top' }}
+  }
+});
+
+const cats = [
+  {cat:"Cleats",            total:24551, latePct:55.0},
+  {cat:"Men's Footwear",    total:22246, latePct:54.5},
+  {cat:"Women's Apparel",   total:21035, latePct:54.6},
+  {cat:"Indoor/Outdoor",    total:19298, latePct:54.7},
+  {cat:"Fishing",           total:17325, latePct:54.9},
+  {cat:"Water Sports",      total:15540, latePct:54.8},
+  {cat:"Camping & Hiking",  total:13729, latePct:54.5},
+  {cat:"Cardio Equipment",  total:12487, latePct:54.5},
+  {cat:"Shop By Sport",     total:10450, latePct:54.8},
+  {cat:"Sporting Goods",    total:9820,  latePct:55.0},
+  {cat:"Electronics",       total:5240,  latePct:54.6},
+  {cat:"Baby",              total:3298,  latePct:54.9}
+];
+
+new Chart(document.getElementById('ch-catvolume'), {
+  type: 'bar',
+  data: {
+    labels: cats.map(d => d.cat),
+    datasets: [{
+      data: cats.map(d => d.total),
+      backgroundColor: cats.map((_, i) => `hsl(${215 + i * 6}, 55%, ${42 + i * 2}%)`),
+      borderRadius: 3
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }},
+    scales: {
+      x: { title: { display: true, text: 'Orders' }},
+      y: { grid: { display: false }}
+    }
+  }
+});
+
+new Chart(document.getElementById('ch-catlate'), {
+  type: 'bar',
+  data: {
+    labels: cats.map(d => d.cat),
+    datasets: [{
+      data: cats.map(d => d.latePct),
+      backgroundColor: '#fca5a5',
+      borderRadius: 3
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }},
+    scales: {
+      x: { min: 53.5, max: 56, ticks: { callback: v => v + '%' }, title: { display: true, text: 'Late rate' }},
+      y: { grid: { display: false }}
+    }
+  }
+});
+</script>
+
+
+</body></html>
