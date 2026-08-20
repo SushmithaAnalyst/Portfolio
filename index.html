@@ -128,12 +128,33 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .skill-name span:last-child{color:var(--gold);font-size:.78rem}
 .skill-bar{height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
 .skill-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+.skill-tag{background:rgba(255,255,255,.05);color:var(--muted);padding:.4rem .9rem;border-radius:50px;font-size:.8rem;font-weight:500;border:1px solid rgba(255,255,255,.07);transition:border-color .2s,color .2s}
+.skill-tag:hover{border-color:rgba(201,168,76,.3);color:var(--gold)}
 
 /* CONTACT */
 #contact{padding:6rem 4rem;text-align:center;background:var(--navy2)}
 .contact-h{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);color:var(--white);margin-bottom:1rem;line-height:1.2}
 .contact-sub{color:var(--muted);font-size:.97rem;max-width:440px;margin:0 auto 2.5rem;line-height:1.85}
 .contact-links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;max-width:1080px;margin:0 auto;text-align:left}
+.contact-info .contact-sub{margin:0 0 2rem}
+.contact-info .contact-links{justify-content:flex-start}
+.contact-form{display:flex;flex-direction:column;gap:1.1rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.form-field{display:flex;flex-direction:column}
+.form-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:.5rem}
+.form-input,.form-textarea{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:6px;padding:.75rem .9rem;color:var(--text);font-family:'Inter',sans-serif;font-size:.9rem;transition:border-color .2s,background .2s}
+.form-input:focus,.form-textarea:focus{outline:none;border-color:rgba(201,168,76,.5);background:rgba(255,255,255,.05)}
+.form-textarea{resize:vertical;min-height:130px;line-height:1.6}
+.form-input.invalid,.form-textarea.invalid{border-color:#e37b7b}
+.form-error{color:#e37b7b;font-size:.76rem;margin-top:.4rem;display:none}
+.form-error.show{display:block}
+.form-submit-btn{background:var(--gold);color:var(--navy);padding:.9rem 2rem;border-radius:6px;font-weight:700;font-size:.88rem;border:none;cursor:pointer;transition:background .2s,transform .15s;font-family:'Inter',sans-serif}
+.form-submit-btn:hover{background:var(--gold2);transform:translateY(-2px)}
+.form-submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.form-success{display:none;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:.9rem 1.1rem;border-radius:6px;font-size:.86rem;margin-top:-.3rem}
+.form-success.show{display:block}
 .clink{display:inline-flex;align-items:center;gap:.6rem;padding:.88rem 1.8rem;border-radius:6px;text-decoration:none;font-weight:500;font-size:.87rem;transition:all .2s}
 .clink-gold{background:var(--gold);color:var(--navy);font-weight:700}.clink-gold:hover{background:var(--gold2);transform:translateY(-2px)}
 .clink-ghost{border:1px solid var(--border);color:var(--muted)}.clink-ghost:hover{border-color:rgba(201,168,76,.3);color:var(--gold)}
@@ -148,6 +169,9 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   .exp-row{grid-template-columns:1fr;gap:.4rem}
   .skills-wrap{grid-template-columns:1fr}
   .about-cards{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr;gap:2.8rem;text-align:center}
+  .contact-info .contact-links{justify-content:center}
+  .form-row{grid-template-columns:1fr}
 }
 
 .gas-gallery{margin-top:.5rem}
@@ -198,7 +222,7 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </h1>
   <p class="hero-body">
     Financial modeling. SQL pipelines. BI dashboards. Strategic decisions.<br/>
-    <strong>Six projects. Four companies. One through line: clarity from complexity.</strong>
+    <strong>Eight projects. Four companies. One through line: clarity from complexity.</strong>
   </p>
   <div class="hero-actions">
     <a class="btn-primary" href="#projects">View Projects</a>
@@ -610,17 +634,21 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
       <div class="skills-wrap">
         <div class="skill-group">
           <h4>Analytics & Finance</h4>
-          <div class="skill-item"><div class="skill-name"><span>Financial Modeling</span><span>95%</span></div><div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div></div>
-          <div class="skill-item"><div class="skill-name"><span>SQL & Snowflake</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
-          <div class="skill-item"><div class="skill-name"><span>Power BI</span><span>92%</span></div><div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div></div>
-          <div class="skill-item"><div class="skill-name"><span>Tableau</span><span>88%</span></div><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+          <div class="skill-tags">
+            <span class="skill-tag">Financial Modeling</span>
+            <span class="skill-tag">SQL & Snowflake</span>
+            <span class="skill-tag">Power BI</span>
+            <span class="skill-tag">Tableau</span>
+          </div>
         </div>
         <div class="skill-group">
           <h4>Tools & Strategy</h4>
-          <div class="skill-item"><div class="skill-name"><span>Excel (Advanced)</span><span>96%</span></div><div class="skill-bar"><div class="skill-fill" style="width:96%"></div></div></div>
-          <div class="skill-item"><div class="skill-name"><span>ETL & Pipelines</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
-          <div class="skill-item"><div class="skill-name"><span>Strategic Analysis</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
-          <div class="skill-item"><div class="skill-name"><span>R & Forecasting</span><span>80%</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+          <div class="skill-tags">
+            <span class="skill-tag">Excel (Advanced)</span>
+            <span class="skill-tag">ETL & Pipelines</span>
+            <span class="skill-tag">Strategic Analysis</span>
+            <span class="skill-tag">R & Forecasting</span>
+          </div>
         </div>
       </div>
     </div>
@@ -659,12 +687,46 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
 <!-- CONTACT -->
 <section id="contact">
   <p class="s-eyebrow" style="display:block;text-align:center;margin-bottom:.6rem">Contact</p>
-  <h2 class="contact-h">Let's work together.</h2>
-  <p class="contact-sub">Have a project, a question, or just want to connect? I'd love to hear from you.</p>
-  <div class="contact-links">
-    <a class="clink clink-gold" href="mailto:Sushmithagutha3@gmail.com">✉ Sushmithagutha3@gmail.com</a>
-    <a class="clink clink-ghost" href="https://www.linkedin.com/in/sushmithagutha" target="_blank">LinkedIn ↗</a>
-    <a class="clink clink-ghost" href="tel:8723146341">(872) 314-6341</a>
+  <h2 class="contact-h" style="text-align:center">Let's connect.</h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p class="contact-sub">Have an opportunity, a question, or just want to connect? I'd love to hear from you.</p>
+      <div class="contact-links">
+        <a class="clink clink-gold" href="mailto:Sushmithagutha3@gmail.com">✉ Sushmithagutha3@gmail.com</a>
+        <a class="clink clink-ghost" href="https://www.linkedin.com/in/sushmithagutha" target="_blank">LinkedIn ↗</a>
+      </div>
+    </div>
+    <form class="contact-form" id="contactForm" novalidate>
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label" for="cf-name">Name</label>
+          <input class="form-input" type="text" id="cf-name" name="name" autocomplete="name"/>
+          <span class="form-error" id="err-name">Please enter your name.</span>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="cf-email">Email</label>
+          <input class="form-input" type="email" id="cf-email" name="email" autocomplete="email"/>
+          <span class="form-error" id="err-email">Please enter a valid email address.</span>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="cf-subject">Subject</label>
+        <input class="form-input" type="text" id="cf-subject" name="subject"/>
+        <span class="form-error" id="err-subject">Please enter a subject.</span>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="cf-message">Message</label>
+        <textarea class="form-textarea" id="cf-message" name="message"></textarea>
+        <span class="form-error" id="err-message">Please enter a message.</span>
+      </div>
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off"/>
+      <input type="hidden" name="_subject" value="New message from portfolio contact form"/>
+      <input type="hidden" name="_captcha" value="false"/>
+      <input type="hidden" name="_template" value="table"/>
+      <button class="form-submit-btn" type="submit" id="cf-submit">Send Message →</button>
+      <p class="form-error" id="cf-generic-error">Something went wrong sending your message. Please try emailing me directly at Sushmithagutha3@gmail.com.</p>
+      <p class="form-success" id="cf-success">Thanks for reaching out! Your message has been sent, I'll get back to you soon.</p>
+    </form>
   </div>
 </section>
 
@@ -698,6 +760,62 @@ function ytTab(i,el){document.getElementById('ytGallery').querySelectorAll('.gg-
 
 function spiritTab(i,el){document.getElementById('spiritGallery').querySelectorAll('.gg-img4').forEach((x,j)=>x.classList.toggle('gg-show4',i===j));document.getElementById('spiritGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
 function whTab(i,el){document.getElementById('whGallery').querySelectorAll('.gg-img5').forEach((x,j)=>x.classList.toggle('gg-show5',i===j));document.getElementById('whGallery').querySelectorAll('.gg-tab').forEach((x,j)=>x.classList.toggle('gg-active',i===j));}
+
+(function(){
+  const form = document.getElementById('contactForm');
+  if(!form) return;
+  const submitBtn = document.getElementById('cf-submit');
+  const successMsg = document.getElementById('cf-success');
+  const genericErr = document.getElementById('cf-generic-error');
+  const fields = ['name','email','subject','message'];
+  function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function showError(field, show){
+    const el = document.getElementById('err-'+field);
+    const input = document.getElementById('cf-'+field);
+    if(el) el.classList.toggle('show', show);
+    if(input) input.classList.toggle('invalid', show);
+  }
+  function validate(){
+    let valid = true;
+    fields.forEach(function(f){
+      const input = document.getElementById('cf-'+f);
+      const val = input.value.trim();
+      let fieldValid = val.length > 0;
+      if(f === 'email' && fieldValid) fieldValid = isValidEmail(val);
+      showError(f, !fieldValid);
+      if(!fieldValid) valid = false;
+    });
+    return valid;
+  }
+  fields.forEach(function(f){
+    document.getElementById('cf-'+f).addEventListener('input', function(){ showError(f, false); });
+  });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    genericErr.classList.remove('show');
+    successMsg.classList.remove('show');
+    if(!validate()) return;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    const formData = new FormData(form);
+    fetch('https://formsubmit.co/ajax/sushmithagutha3@gmail.com', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: formData
+    }).then(function(res){
+      if(!res.ok) throw new Error('Request failed');
+      return res.json();
+    }).then(function(){
+      form.reset();
+      successMsg.classList.add('show');
+    }).catch(function(){
+      genericErr.classList.add('show');
+    }).finally(function(){
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Message →';
+    });
+  });
+})();
 </script>
 </body>
 </html>
