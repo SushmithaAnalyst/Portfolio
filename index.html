@@ -100,8 +100,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .proj-card-btn:hover{border-color:rgba(201,168,76,.35);color:var(--gold)}
 .proj-card-btn-primary{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.25);color:var(--gold)}
 .proj-card-btn-primary:hover{background:rgba(201,168,76,.18);border-color:rgba(201,168,76,.4)}
-.proj-detail-divider{display:flex;align-items:center;gap:1.2rem;margin:1rem 0 4rem;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.15em;font-weight:600}
-.proj-detail-divider::before,.proj-detail-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.proj-card{cursor:pointer}
+.proj-grid-hint{text-align:center;color:var(--muted);font-size:.78rem;margin-top:.4rem}
+
+/* PROJECT MODAL */
+.proj-modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(4,12,26,.82);backdrop-filter:blur(6px);padding:4rem 1.5rem;overflow-y:auto}
+.proj-modal-overlay.open{display:block}
+.proj-modal{position:relative;max-width:1000px;margin:0 auto;background:var(--navy);border:1px solid var(--border);border-radius:16px;padding:3rem 3rem 2.5rem;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.proj-modal-close{position:absolute;top:1.2rem;right:1.2rem;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted);font-size:1.4rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.proj-modal-close:hover{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.08)}
+#projModalBody .project-block{display:none;margin-bottom:0;padding-bottom:0;border-bottom:none}
+#projModalBody .project-block.modal-active{display:grid}
 
 /* DASHBOARD PANEL */
 .dashboard-panel{background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
@@ -203,6 +212,8 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   .skills-grid{grid-template-columns:1fr}
   .proj-filter-bar{gap:.5rem}
   .proj-filter-btn{padding:.5rem 1rem;font-size:.76rem}
+  .proj-modal-overlay{padding:1.2rem .8rem}
+  .proj-modal{padding:2.2rem 1.3rem 1.8rem;border-radius:12px}
 }
 
 .gas-gallery{margin-top:.5rem}
@@ -284,106 +295,110 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
   </div>
 
   <div class="proj-grid">
-    <div class="proj-card" data-cat="logistics">
+    <div class="proj-card" data-cat="logistics" onclick="openProjectModal('dhl')">
       <div class="proj-card-thumb"><img src="DHL-dashboard.png" alt="DHL Group Q2 2026 Dashboard" loading="lazy"/><span class="proj-card-cat">Logistics &amp; Supply Chain</span></div>
       <div class="proj-card-body">
         <h4 class="proj-card-title">DHL Group Q2 2026 Performance Analysis</h4>
         <p class="proj-card-desc">Six quarters of DHL Group Statbook data structured in SQLite and visualized in an interactive Tableau dashboard, surfacing a 12.9% YoY revenue story.</p>
         <div class="proj-card-tags"><span class="proj-card-tag">SQL</span><span class="proj-card-tag">Tableau</span></div>
         <div class="proj-card-actions">
-          <a class="proj-card-btn proj-card-btn-primary" href="https://public.tableau.com/views/DHL_YOY/Dashboard2?:language=en-US&amp;:sid=&amp;:redirect=auth&amp;:display_count=n&amp;:origin=viz_share_link" target="_blank" rel="noopener">Dashboard</a>
-          <a class="proj-card-btn" href="#detail-dhl">Case Study</a>
+          <a class="proj-card-btn proj-card-btn-primary" href="https://public.tableau.com/views/DHL_YOY/Dashboard2?:language=en-US&amp;:sid=&amp;:redirect=auth&amp;:display_count=n&amp;:origin=viz_share_link" target="_blank" rel="noopener" onclick="event.stopPropagation()">Dashboard</a>
+          <button class="proj-card-btn" onclick="event.stopPropagation();openProjectModal('dhl')">Case Study →</button>
         </div>
       </div>
     </div>
 
-    <div class="proj-card" data-cat="logistics">
+    <div class="proj-card" data-cat="logistics" onclick="openProjectModal('warehouse')">
       <div class="proj-card-thumb"><img src="WO.png" alt="Warehouse Operations Overview" loading="lazy"/><span class="proj-card-cat">Operations</span></div>
       <div class="proj-card-body">
         <h4 class="proj-card-title">Warehouse Shipment Delay Analysis</h4>
         <p class="proj-card-desc">180,519 orders across five markets and 38 months traced a 54.8% late-delivery rate back to an Order Management System, not warehouse execution.</p>
         <div class="proj-card-tags"><span class="proj-card-tag">Root Cause Analysis</span><span class="proj-card-tag">Executive Reporting</span></div>
         <div class="proj-card-actions">
-          <a class="proj-card-btn proj-card-btn-primary" href="warehouse-dashboard.html" target="_blank" rel="noopener">Dashboard</a>
-          <a class="proj-card-btn" href="#detail-warehouse">Case Study</a>
+          <a class="proj-card-btn proj-card-btn-primary" href="warehouse-dashboard.html" target="_blank" rel="noopener" onclick="event.stopPropagation()">Dashboard</a>
+          <button class="proj-card-btn" onclick="event.stopPropagation();openProjectModal('warehouse')">Case Study →</button>
         </div>
       </div>
     </div>
 
-    <div class="proj-card" data-cat="finance">
+    <div class="proj-card" data-cat="finance" onclick="openProjectModal('gas')">
       <div class="proj-card-thumb"><img src="US%20GAS%20OVERVIEW.png" alt="US Fuel Price Dashboard Overview" loading="lazy"/><span class="proj-card-cat">Finance</span></div>
       <div class="proj-card-body">
         <h4 class="proj-card-title">Nobody had a real-time national fuel picture. So I built one.</h4>
         <p class="proj-card-desc">A live AI-powered fuel pricing dashboard across all 51 states, pulling directly from AAA, surfaced a 53% YoY diesel spike hiding a logistics cost crisis.</p>
         <div class="proj-card-tags"><span class="proj-card-tag">Claude AI</span><span class="proj-card-tag">Excel Modeling</span></div>
         <div class="proj-card-actions">
-          <a class="proj-card-btn" href="#detail-gas">Case Study</a>
+          <button class="proj-card-btn" onclick="event.stopPropagation();openProjectModal('gas')">Case Study →</button>
         </div>
       </div>
     </div>
 
-    <div class="proj-card" data-cat="health">
+    <div class="proj-card" data-cat="health" onclick="openProjectModal('covid')">
       <div class="proj-card-thumb"><img src="Covid.png" alt="Chicago COVID-19 Trends Dashboard" loading="lazy"/><span class="proj-card-cat">Public Health</span></div>
       <div class="proj-card-body">
         <h4 class="proj-card-title">Can you see a COVID surge coming before it arrives?</h4>
         <p class="proj-card-desc">SQL infrastructure across 70+ Chicago ZIP codes found positivity-rate spikes preceded case surges by 7 to 14 days, a real early-warning window.</p>
         <div class="proj-card-tags"><span class="proj-card-tag">Snowflake SQL</span><span class="proj-card-tag">Predictive Signals</span></div>
         <div class="proj-card-actions">
-          <a class="proj-card-btn" href="#detail-covid">Case Study</a>
+          <button class="proj-card-btn" onclick="event.stopPropagation();openProjectModal('covid')">Case Study →</button>
         </div>
       </div>
     </div>
 
-    <div class="proj-card" data-cat="logistics">
+    <div class="proj-card" data-cat="logistics" onclick="openProjectModal('citibike')">
       <div class="proj-card-thumb"><img src="descriptive%20analysis.png" alt="CitiBike Demand Descriptive Analysis" loading="lazy"/><span class="proj-card-cat">Operations</span></div>
       <div class="proj-card-body">
         <h4 class="proj-card-title">The bikes were there. They just weren't where people needed them.</h4>
         <p class="proj-card-desc">Station-level demand analysis showed 6 PM commuter peaks, not weather, drove the shortages, pointing to timed rebalancing instead of broad network averages.</p>
         <div class="proj-card-tags"><span class="proj-card-tag">Demand Modeling</span><span class="proj-card-tag">Station Analysis</span></div>
         <div class="proj-card-actions">
-          <a class="proj-card-btn" href="#detail-citibike">Case Study</a>
+          <button class="proj-card-btn" onclick="event.stopPropagation();openProjectModal('citibike')">Case Study →</button>
         </div>
       </div>
     </div>
 
-    <div class="proj-card" data-cat="urban">
+    <div class="proj-card" data-cat="urban" onclick="openProjectModal('roseland')">
       <div class="proj-card-thumb"><img src="Roseland.jpg" alt="Roseland Neighborhood Map, Chicago" loading="lazy"/><span class="proj-card-cat">Urban Strategy</span></div>
       <div class="proj-card-body">
         <h4 class="proj-card-title">The Red Line is coming. Roseland isn't ready.</h4>
         <p class="proj-card-desc">Demographic, income, and food-access data shaped a data-backed co-op grocery recommendation for a Chicago neighborhood the CTA extension is about to reach.</p>
         <div class="proj-card-tags"><span class="proj-card-tag">Demographic Analysis</span><span class="proj-card-tag">Market Sizing</span></div>
         <div class="proj-card-actions">
-          <a class="proj-card-btn" href="#detail-roseland">Case Study</a>
+          <button class="proj-card-btn" onclick="event.stopPropagation();openProjectModal('roseland')">Case Study →</button>
         </div>
       </div>
     </div>
 
-    <div class="proj-card" data-cat="content">
+    <div class="proj-card" data-cat="content" onclick="openProjectModal('youtube')">
       <div class="proj-card-thumb"><img src="Youtube_Analysis_1.png" alt="YouTube Content Performance Analysis" loading="lazy"/><span class="proj-card-cat">Content Analytics</span></div>
       <div class="proj-card-body">
         <h4 class="proj-card-title">Views don't mean success. 537 videos prove it.</h4>
         <p class="proj-card-desc">Thirteen years of YouTube data across 537 videos found the first 60 days, not subscriber count or total views, is the strongest predictor of long-term performance.</p>
         <div class="proj-card-tags"><span class="proj-card-tag">Tableau</span><span class="proj-card-tag">Engagement Modeling</span></div>
         <div class="proj-card-actions">
-          <a class="proj-card-btn" href="#detail-youtube">Case Study</a>
+          <button class="proj-card-btn" onclick="event.stopPropagation();openProjectModal('youtube')">Case Study →</button>
         </div>
       </div>
     </div>
 
-    <div class="proj-card" data-cat="finance">
+    <div class="proj-card" data-cat="finance" onclick="openProjectModal('spirit')">
       <div class="proj-card-thumb"><img src="Overview.png" alt="Spirit Airlines Analytics Overview" loading="lazy"/><span class="proj-card-cat">Aviation</span></div>
       <div class="proj-card-body">
         <h4 class="proj-card-title">Spirit Airlines: Ceased Operations Analysis</h4>
         <p class="proj-card-desc">A 34-year financial autopsy tracing $2.5B+ in cumulative losses, the blocked JetBlue merger, and the cascade of failures that ended in full shutdown.</p>
         <div class="proj-card-tags"><span class="proj-card-tag">Excel</span><span class="proj-card-tag">Power BI</span></div>
         <div class="proj-card-actions">
-          <a class="proj-card-btn" href="#detail-spirit">Case Study</a>
+          <button class="proj-card-btn" onclick="event.stopPropagation();openProjectModal('spirit')">Case Study →</button>
         </div>
       </div>
     </div>
   </div>
+  <p class="proj-grid-hint">Click any project to view the full case study.</p>
 
-  <div class="proj-detail-divider"><span>Full Case Studies</span></div>
+  <div class="proj-modal-overlay" id="projModalOverlay" onclick="if(event.target===this)closeProjectModal()">
+    <div class="proj-modal">
+      <button class="proj-modal-close" onclick="closeProjectModal()" aria-label="Close case study">&times;</button>
+      <div class="proj-modal-body" id="projModalBody">
 
   <!-- P1: DHL -->
   <div class="project-block" id="detail-dhl">
@@ -714,6 +729,10 @@ footer{text-align:center;padding:1.8rem;border-top:1px solid var(--border);color
       </div>
     </div>
 
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <!-- SKILLS -->
@@ -1018,6 +1037,22 @@ function projFilter(cat,el){
     c.style.display=(cat==='all'||c.getAttribute('data-cat')===cat)?'':'none';
   });
 }
+function openProjectModal(id){
+  document.querySelectorAll('#projModalBody .project-block').forEach(b=>{
+    b.classList.toggle('modal-active', b.id==='detail-'+id);
+  });
+  const overlay=document.getElementById('projModalOverlay');
+  overlay.classList.add('open');
+  overlay.scrollTop=0;
+  document.body.style.overflow='hidden';
+}
+function closeProjectModal(){
+  document.getElementById('projModalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')closeProjectModal();
+});
 </script>
 </body>
 </html>
